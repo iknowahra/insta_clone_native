@@ -6,7 +6,7 @@ import logo from './assets/logoLetter.png';
 import apolloOptions from './Apollo';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { CachePersistor, AsyncStorageWrapper } from 'apollo3-cache-persist';
-import Controller from './components/controllers';
+import NavController from './components/NavControllers';
 import { AuthProvider } from './contexts/AuthContext';
 const SCHEMA_VERSION = '3';
 const SCHEMA_VERSION_KEY = 'apollo';
@@ -51,12 +51,10 @@ export default function App() {
 
   return client ? (
     <ApolloProvider client={client}>
-      <View style={styles.container}>
-        <AuthProvider isLoggedIn={isLoggedIn}>
-          <Controller />
-        </AuthProvider>
-        <StatusBar style="auto" />
-      </View>
+      <AuthProvider isLoggedIn={isLoggedIn}>
+        <NavController />
+      </AuthProvider>
+      <StatusBar style="auto" />
     </ApolloProvider>
   ) : (
     <View style={styles.container}>
