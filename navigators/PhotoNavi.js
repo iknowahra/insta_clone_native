@@ -16,7 +16,7 @@ function PhotoTabNavigation() {
 }
 
 const Stack = createStackNavigator();
-export default function MainNavigation() {
+export default function PhotoNavigation() {
   return (
     <Stack.Navigator initialRouteName="PhotoTabNavigation">
       <Stack.Screen

@@ -1,4 +1,4 @@
-export const themes = {
+export default {
   blackColor: '#262626',
   greyColor: '#F9F9F9',
   darkGreyColor: '#999',
@@ -7,5 +7,3 @@ export const themes = {
   blueColor: '#3897f0',
   darkBlueColor: '#003569',
 };
-
-export const ThemeContext = React.createContext(themes);

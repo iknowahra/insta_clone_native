@@ -7,11 +7,11 @@ import {
   userLogOut,
   AuthContext,
 } from '../contexts/AuthContext';
-import AuthNavigation from '../Navigators/AuthNavi';
-import MainNavigation from '../Navigators/MainNavi';
+import AuthNavigation from '../navigators/AuthNavi';
+import MainNavigation from '../navigators/MainNavi';
 
 export default () => {
-  const isLoggedIn = true;
+  const isLoggedIn = false;
   return (
     <NavigationContainer>
       {isLoggedIn ? <MainNavigation /> : <AuthNavigation />}

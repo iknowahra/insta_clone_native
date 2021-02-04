@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Home from '../screens/Home';
-import Notification from '../screens/Notification';
-import Profile from '../screens/Profile';
-import Search from '../screens/Search';
+import Home from '../screens/Main/Home';
+import Notification from '../screens/Main/Notification';
+import Profile from '../screens/Main/Profile';
+import Search from '../screens/Main/Search';
 import PhotoNavigation from './PhotoNavi';
 import { Button } from 'react-native';
 
@@ -21,14 +21,19 @@ const stackFactory = (initialRoute, name, customConfig) => (
   </Stack.Navigator>
 );
 
-export default function TabNavigation() {
+export default function TabNavigation({ navigation }) {
   return (
     <Tab.Navigator headerMode="none" mode="modal">
       <Tab.Screen name="Home">
         {() =>
           stackFactory(Home, 'Home', {
             title: 'Home',
-            headerRight: () => <Button title="hello"></Button>,
+            headerRight: () => (
+              <Button
+                title="hello"
+                onPress={() => navigation.navigate('MessageNavigation')}
+              ></Button>
+            ),
           })
         }
       </Tab.Screen>
@@ -36,7 +41,6 @@ export default function TabNavigation() {
         {() =>
           stackFactory(Search, 'Search', {
             title: 'Search',
-            headerRight: () => <Button title="Search"></Button>,
           })
         }
       </Tab.Screen>
@@ -44,7 +48,6 @@ export default function TabNavigation() {
         {() =>
           stackFactory(PhotoNavigation, 'Add', {
             title: 'Add',
-            headerRight: () => <Button title="Add"></Button>,
           })
         }
       </Tab.Screen>
@@ -52,7 +55,6 @@ export default function TabNavigation() {
         {() =>
           stackFactory(Notification, 'Notification', {
             title: 'Notification',
-            headerRight: () => <Button title="Notification"></Button>,
           })
         }
       </Tab.Screen>
