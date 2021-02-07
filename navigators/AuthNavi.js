@@ -8,7 +8,7 @@ import AuthHome from '../screens/Auth/AuthHome';
 const Stack = createStackNavigator();
 export default function AuthNavigation() {
   return (
-    <Stack.Navigator initialRouteName="AuthHome">
+    <Stack.Navigator initialRouteName="Login">
       <Stack.Screen name="AuthHome" component={AuthHome} />
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="Login" component={Login} />
