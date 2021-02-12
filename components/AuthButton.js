@@ -1,18 +1,36 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  Pressable,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 import PropTypes from 'prop-types';
 import constants from './Constants';
 import themes from '../contexts/ThemeContext';
 
-const AuthButton = ({ text, onPress }) => (
-  <TouchableOpacity onPress={onPress}>
-    <View style={styles.container}>
-      <Text style={styles.text}>{text}</Text>
+const AuthButton = ({ text, onPress, disabled, loading = false }) => (
+  <Pressable onPress={onPress} disabled={disabled || loading}>
+    <View
+      style={
+        !disabled && !loading
+          ? styles.container
+          : { ...styles.container, backgroundColor: themes.inactiveBlueColor }
+      }
+    >
+      {loading ? (
+        <ActivityIndicator color={'white'} />
+      ) : (
+        <Text style={styles.text}>{text}</Text>
+      )}
     </View>
-  </TouchableOpacity>
+  </Pressable>
 );
 
 AuthButton.propTypes = {
+  loading: PropTypes.bool,
+  disabled: PropTypes.bool,
   text: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
 };
@@ -20,16 +38,18 @@ AuthButton.propTypes = {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: themes.blueColor,
-    width: constants.width / 2.1,
+    width: constants.width / 1.2,
+    height: 45,
     padding: 5,
     borderRadius: 4,
     alignItems: 'center',
-    marginBottom: 10,
+    marginVertical: 20,
+    justifyContent: 'center',
   },
   text: {
     color: 'white',
-    fontWeight: 'bold',
-    fontSize: 17,
+    fontSize: 13,
+    fontWeight: '800',
   },
 });
 
