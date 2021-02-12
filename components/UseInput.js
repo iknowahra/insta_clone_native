@@ -9,7 +9,7 @@ const UseInput = (props) => (
 
 const styles = StyleSheet.create({
   textInput: {
-    width: constants.width / 2,
+    width: constants.width / 1.2,
     padding: 10,
     backgroundColor: themes.greyColor,
     borderWidth: 0.5,

@@ -1,51 +1,26 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import PropTypes from 'prop-types';
 import UseInput from './UseInput';
 
-const AuthInput = ({
-  placeholder,
-  keyboardType = 'default',
-  autoCapitalize = 'none',
-  returnKeyType = 'done',
-  onEndEditing = () => null,
-  autoCorrect = true,
-}) => {
-  const [value, onChangeText] = useState('');
+const AuthInput = (props) => {
+  const [] = useState(props.value);
   return (
     <View style={styles.container}>
       <UseInput
-        keyboardType={keyboardType}
-        placeholder={placeholder}
-        autoCapitalize={autoCapitalize}
-        value={value}
-        onEndEditing={onEndEditing}
-        autoCorrect={autoCorrect}
-        returnKeyType={returnKeyType}
-        onChangeText={(text) => onChangeText(text)}
+        {...props}
+        keyboardType={props.keyboardType}
+        placeholder={props.placeholder}
+        autoCapitalize={props.autoCapitalize}
+        value={props.value}
+        autoCorrect={props.autoCorrect}
+        returnKeyType={props.returnKeyType}
       />
     </View>
   );
 };
 
-AuthInput.propTypes = {
-  placeholder: PropTypes.string.isRequired,
-  returnKeyType: PropTypes.oneOf(['done', 'go', 'next', 'search', 'send']),
-  onEndEditing: PropTypes.func,
-  autoCorrect: PropTypes.bool,
-  keyboardType: PropTypes.oneOf([
-    'default',
-    'number-pad',
-    'decimal-pad',
-    'numeric',
-    'email-address',
-    'phone-pad',
-  ]),
-  autoCapitalize: PropTypes.oneOf(['none', 'sentences', 'words', 'characters']),
-};
-
 const styles = StyleSheet.create({
-  container: { marginBottom: 10 },
+  container: { marginBottom: 13 },
 });
 
 export default AuthInput;
