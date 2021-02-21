@@ -11,7 +11,7 @@ import constants from './Constants';
 import themes from '../contexts/ThemeContext';
 
 const AuthButton = ({ text, onPress, disabled, loading = false }) => (
-  <Pressable onPress={onPress} disabled={disabled || loading}>
+  <Pressable onPress={onPress} disabled={disabled && loading}>
     <View
       style={
         !disabled && !loading
