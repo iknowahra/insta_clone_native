@@ -35,8 +35,8 @@ export const SIGN_UP = gql`
 `;
 
 export const REQUEST_SECRET = gql`
-  mutation requestSecret($userName: String!, $email: String!) {
-    requestSecret(userName: $userName, email: $email) {
+  mutation requestSecret($email: String!) {
+    requestSecret(email: $email) {
       ok
       error
     }
@@ -46,6 +46,15 @@ export const REQUEST_SECRET = gql`
 export const CONFIRM_SECRET = gql`
   mutation confirmSecret($secret: String!, $email: String!) {
     confirmSecret(secret: $secret, email: $email) {
+      ok
+      error
+    }
+  }
+`;
+
+export const CHECK_USER = gql`
+  query checkUser($userName: String, $email: String) {
+    checkUser(userName: $userName, email: $email) {
       ok
       error
     }

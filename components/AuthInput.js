@@ -3,7 +3,6 @@ import { View, StyleSheet } from 'react-native';
 import UseInput from './UseInput';
 
 const AuthInput = (props) => {
-  const [] = useState(props.value);
   return (
     <View style={styles.container}>
       <UseInput
