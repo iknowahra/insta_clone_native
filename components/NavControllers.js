@@ -1,28 +1,17 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useReactiveVar } from '@apollo/client';
+import { isLogginVar } from '../contexts/AuthContext';
 import { NavigationContainer } from '@react-navigation/native';
-import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
-import {
-  userIsLoggedIn,
-  userLogIn,
-  userLogOut,
-  AuthContext,
-} from '../contexts/AuthContext';
 import AuthNavigation from '../navigators/AuthNavi';
 import MainNavigation from '../navigators/MainNavi';
 
-export default () => {
-  const isLoggedIn = false;
+export default ({ isLoggedIn }) => {
+  const [isLogin, setLogin] = useState(false);
+  const checkUserLogin = false;
+  //useReactiveVar(isLogginVar);
   return (
     <NavigationContainer>
-      {isLoggedIn ? <MainNavigation /> : <AuthNavigation />}
+      {isLogin || checkUserLogin ? <MainNavigation /> : <AuthNavigation />}
     </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'stretch',
-    justifyContent: 'center',
-  },
-});

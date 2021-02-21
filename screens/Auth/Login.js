@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Image,
   View,
@@ -8,23 +8,87 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
+  Alert,
 } from 'react-native';
-import { Formik } from 'formik';
 import * as yup from 'yup';
+import { Formik } from 'formik';
+import { useMutation } from '@apollo/client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { LOG_IN } from './Queries';
+import { isLogginVar } from '../../contexts/AuthContext';
 import themes from '../../contexts/ThemeContext';
 import logo from '../../assets/logoLetter.png';
 import AuthButton from '../../components/AuthButton';
 import AuthInput from '../../components/AuthInput';
-import { useEffect } from 'react';
 
-export default ({ navigation }) => {
+export default ({ navigation, route }) => {
+  const email = (route.params && route.params.email) || '';
   const [loading, setLoading] = useState(false);
+  const [isLogin, setLogin] = useState(false);
+  const [loginEmailMutation] = useMutation(LOG_IN);
+
+  const onhandleSubmit = async (values) => {
+    try {
+      setLoading(true);
+      const {
+        data: { loginEmail },
+      } = await loginEmailMutation({
+        variables: { email: values.email, password: values.password },
+      });
+      if (loginEmail) {
+        if (loginEmail.error) {
+          if (loginEmail.error === 'There is no user.') {
+            Alert.alert("There's no user", 'Do you want to sign up?', [
+              {
+                text: 'Sign up',
+                onPress: () =>
+                  navigation.navigate('Signup', { email: values.email }),
+              },
+              { text: 'Try again', style: 'cancel' },
+            ]);
+          } else {
+            Alert.alert(loginEmail.error);
+          }
+        } else {
+          await AsyncStorage.setItem('token', loginEmail.token);
+          if (!loginEmail.user.confirmSecret) {
+            Alert.alert(
+              'Validate Email Addresses',
+              'Once you need to validate your email address',
+              [
+                {
+                  text: 'Ok',
+                  onPress: () =>
+                    navigation.navigate('Confirm', { email: values.email }),
+                },
+              ],
+            );
+          } else {
+            setLogin(!!(await AsyncStorage.getItem('token')));
+            await AsyncStorage.setItem('isLoggedIn', 'true');
+          }
+        }
+      }
+    } catch (e) {
+      console.log('Login page', e);
+      Alert.alert('Unknown error happens', 'Please try to log in again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isLogin) {
+      isLogginVar(true);
+    }
+  }, [isLogin]);
   return (
     <View style={styles.container}>
       <Formik
         validationSchema={loginValidationSchema}
-        initialValues={{ email: '', password: '' }}
-        onSubmit={(values) => console.log(values)}
+        initialValues={{ email, password: '' }}
+        onSubmit={(values) => onhandleSubmit(values)}
       >
         {({ handleChange, handleBlur, handleSubmit, values, isValid }) => (
           <View>
@@ -55,8 +119,8 @@ export default ({ navigation }) => {
                       onChangeText={handleChange('password')}
                       onBlur={handleBlur('password')}
                       value={values.password}
-                      placeholder="Password"
                       secureTextEntry
+                      onSubmitEditing={handleSubmit}
                       returnKeyType="send"
                       autoCorrect={false}
                     />
@@ -84,7 +148,7 @@ export default ({ navigation }) => {
 
       <View style={styles.signupFooter}>
         <View style={styles.signupFooterContainer}>
-          <Text>Don't you have an account yet?</Text>
+          <Text>You don't have an account yet?</Text>
           <Pressable onPress={() => navigation.navigate('Signup')}>
             <Text style={styles.signupFooterPressableText}>Sign up</Text>
           </Pressable>
