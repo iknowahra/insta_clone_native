@@ -1,13 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { useReactiveVar } from '@apollo/client';
+import { Image, StyleSheet, AppRegistry, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import logo from './assets/logoLetter.png';
-import apolloOptions from './Apollo';
+import { options, cache } from './Apollo';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { CachePersistor, AsyncStorageWrapper } from 'apollo3-cache-persist';
 import NavController from './components/NavControllers';
-import { AuthProvider } from './contexts/AuthContext';
 const SCHEMA_VERSION = '3';
 const SCHEMA_VERSION_KEY = 'apollo';
 
@@ -17,17 +17,15 @@ export default function App() {
 
   const preLoad = async () => {
     try {
-      const cache = new InMemoryCache();
-      const client = new ApolloClient({
-        cache,
-        ...apolloOptions,
+      const apolloClient = new ApolloClient({
+        ...options,
       });
       const persistor = new CachePersistor({
         cache,
         storage: new AsyncStorageWrapper(AsyncStorage),
       });
       const currentVersion = await AsyncStorage.getItem(SCHEMA_VERSION_KEY);
-      setClient(client);
+      setClient(apolloClient);
       if (currentVersion === SCHEMA_VERSION) {
         await persistor.restore();
       } else {
@@ -49,11 +47,10 @@ export default function App() {
     preLoad();
   }, []);
 
+  console.log('****', isLoggedIn);
   return client ? (
     <ApolloProvider client={client}>
-      <AuthProvider isLoggedIn={isLoggedIn}>
-        <NavController />
-      </AuthProvider>
+      <NavController isLoggedIn={isLoggedIn} />
       <StatusBar style="auto" />
     </ApolloProvider>
   ) : (
@@ -63,6 +60,8 @@ export default function App() {
     </View>
   );
 }
+
+AppRegistry.registerComponent('instagram', App);
 
 const styles = StyleSheet.create({
   container: {
