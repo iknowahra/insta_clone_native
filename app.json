@@ -25,6 +25,9 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "facebookScheme": "fb250653766733527",
+    "facebookAppId": "250653766733527",
+    "facebookDisplayName": "Practice App"
   }
 }

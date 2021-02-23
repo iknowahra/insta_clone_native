@@ -46,7 +46,6 @@ export default ({ route }) => {
     }
   };
   const onhandleSubmit = async (values) => {
-    console.log('ssibal', values);
     try {
       setLoading(true);
       const {

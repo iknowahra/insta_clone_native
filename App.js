@@ -47,7 +47,6 @@ export default function App() {
     preLoad();
   }, []);
 
-  console.log('****', isLoggedIn);
   return client ? (
     <ApolloProvider client={client}>
       <NavController isLoggedIn={isLoggedIn} />

@@ -32,7 +32,8 @@
     "react-native-tab-view": "2.15.2",
     "react-native-web": "~0.13.12",
     "style-component": "0.0.1",
-    "yup": "0.32.8"
+    "yup": "0.32.8",
+    "expo-facebook": "~9.1.0"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"
