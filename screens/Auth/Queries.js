@@ -13,13 +13,26 @@ export const LOG_IN = gql`
   }
 `;
 
+export const LOG_IN_FB = gql`
+  mutation loginFb($email: String!, $facebookId: String!) {
+    loginFb(email: $email, facebookId: $facebookId) {
+      token
+      error
+      user {
+        confirmSecret
+      }
+    }
+  }
+`;
+
 export const SIGN_UP = gql`
   mutation createAccount(
     $userName: String!
     $email: String!
-    $password: String!
+    $password: String
     $firstName: String
     $lastName: String
+    $facebookId: String
   ) {
     createAccount(
       userName: $userName
@@ -27,6 +40,7 @@ export const SIGN_UP = gql`
       email: $email
       firstName: $firstName
       lastName: $lastName
+      facebookId: $facebookId
     ) {
       ok
       error

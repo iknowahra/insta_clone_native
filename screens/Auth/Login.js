@@ -1,3 +1,5 @@
+// 텍스트 인풋 누르면 화면 올라가는 거 지웠는데 왜 올라가지...?
+// 레이아웃 손볼 것
 import React, { useState, useEffect } from 'react';
 import {
   Image,
@@ -6,7 +8,6 @@ import {
   StyleSheet,
   Pressable,
   Keyboard,
-  KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Alert,
 } from 'react-native';
@@ -15,19 +16,34 @@ import { Formik } from 'formik';
 import { useMutation } from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { LOG_IN } from './Queries';
+import { LOG_IN, LOG_IN_FB } from './Queries';
 import { isLogginVar } from '../../contexts/AuthContext';
 import themes from '../../contexts/ThemeContext';
 import logo from '../../assets/logoLetter.png';
+import fbLogo from '../../assets/facebookBlue.png';
 import AuthButton from '../../components/AuthButton';
 import AuthInput from '../../components/AuthInput';
+import Constants from '../../components/Constants';
 
 export default ({ navigation, route }) => {
   const email = (route.params && route.params.email) || '';
   const [loading, setLoading] = useState(false);
   const [isLogin, setLogin] = useState(false);
+  const [fbUser, setFbUser] = useState('');
   const [loginEmailMutation] = useMutation(LOG_IN);
+  const [loginFbMutation] = useMutation(LOG_IN_FB);
 
+  const preLoad = async () => {
+    const fbToken = await AsyncStorage.getItem('FBtoken');
+    const fbUserInfo = await AsyncStorage.getItem('FBUserInfo');
+    if (fbUserInfo) {
+      const { name } = JSON.parse(fbUserInfo);
+      setFbUser(name);
+    }
+    if (fbToken) {
+      setLogin(true);
+    }
+  };
   const onhandleSubmit = async (values) => {
     try {
       setLoading(true);
@@ -78,11 +94,66 @@ export default ({ navigation, route }) => {
     }
   };
 
+  const fbLogin = async () => {
+    try {
+      await Facebook.initializeAsync({
+        appId: '253692292993280',
+      });
+      const { type, token } = await Facebook.logInWithReadPermissionsAsync({
+        permissions: ['public_profile', 'email'],
+      });
+      if (type === 'success') {
+        const response = await fetch(
+          `https://graph.facebook.com/me?fields=id,name,first_name,last_name,email&access_token=${token}`,
+        );
+        const userInfo = await response.json();
+        await AsyncStorage.setItem('FBtoken', token);
+        await AsyncStorage.setItem('FBUserInfo', JSON.stringify(userInfo));
+        const {
+          email,
+          fist_name: firstName,
+          id: facebookId,
+          last_name: lastName,
+        } = userInfo;
+        const isNewUser = await onCheckNewAccount(email);
+        if (isNewUser) {
+          navigation.navigate('SignupMid', {
+            email,
+            firstName,
+            lastName,
+            facebookId,
+          });
+        } else {
+          const {
+            data: { loginFb },
+          } = await loginFbMutation({
+            variables: {
+              email,
+              facebookId,
+            },
+          });
+
+          if (!loginFb.ok) {
+            Alert.alert('Error', loginFb.error);
+          } else {
+            await AsyncStorage.setItem('token', loginFb.token);
+            setFbLogin(true);
+          }
+        }
+      }
+    } catch ({ message }) {
+      alert(`Facebook Login Error: ${message}`);
+    }
+  };
+
   useEffect(() => {
     if (isLogin) {
       isLogginVar(true);
     }
   }, [isLogin]);
+  useEffect(() => {
+    preLoad();
+  }, []);
   return (
     <View style={styles.container}>
       <Formik
@@ -92,63 +163,72 @@ export default ({ navigation, route }) => {
       >
         {({ handleChange, handleBlur, handleSubmit, values, isValid }) => (
           <View>
-            <KeyboardAvoidingView
-              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-              style={styles.keyboardAvoidingContainer}
-            >
-              <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={styles.innerContainer}>
-                  <View style={styles.logoContainer}>
-                    <Image source={logo} style={styles.logo} />
-                  </View>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+              <View style={styles.innerContainer}>
+                <View style={styles.logoContainer}>
+                  <Image source={logo} style={styles.logo} />
+                </View>
 
-                  <View>
-                    <AuthInput
-                      name="email"
-                      placeholder="Email Address"
-                      onChangeText={handleChange('email')}
-                      onBlur={handleBlur('email')}
-                      value={values.email}
-                      keyboardType="email-address"
-                      autoCorrect={false}
-                    />
+                <View>
+                  <AuthInput
+                    name="email"
+                    placeholder="Email Address"
+                    onChangeText={handleChange('email')}
+                    onBlur={handleBlur('email')}
+                    value={values.email}
+                    keyboardType="email-address"
+                    autoCorrect={false}
+                  />
 
-                    <AuthInput
-                      name="password"
-                      placeholder="Password"
-                      onChangeText={handleChange('password')}
-                      onBlur={handleBlur('password')}
-                      value={values.password}
-                      secureTextEntry
-                      onSubmitEditing={handleSubmit}
-                      returnKeyType="send"
-                      autoCorrect={false}
-                    />
-                  </View>
-
-                  <Pressable
-                    onPress={() => navigation.navigate('LostPassword')}
-                  >
-                    <Text style={styles.lostPasswordText}>
-                      Did you forget your password?
-                    </Text>
-                  </Pressable>
-                  <AuthButton
-                    onPress={handleSubmit}
-                    text="Log In"
-                    loading={loading}
-                    disabled={!isValid}
+                  <AuthInput
+                    name="password"
+                    placeholder="Password"
+                    onChangeText={handleChange('password')}
+                    onBlur={handleBlur('password')}
+                    value={values.password}
+                    secureTextEntry
+                    onSubmitEditing={handleSubmit}
+                    returnKeyType="send"
+                    autoCorrect={false}
                   />
                 </View>
-              </TouchableWithoutFeedback>
-            </KeyboardAvoidingView>
+
+                <Pressable onPress={() => navigation.navigate('LostPassword')}>
+                  <Text style={styles.lostPasswordText}>
+                    Did you forget your password?
+                  </Text>
+                </Pressable>
+                <AuthButton
+                  onPress={handleSubmit}
+                  text="Log In"
+                  loading={loading}
+                  disabled={!isValid}
+                />
+                <View
+                  style={{
+                    ...styles.signupFooter,
+                    ...styles.border,
+                  }}
+                >
+                  <Text style={styles.borderText}>OR</Text>
+                </View>
+                <Pressable style={styles.loginFb} onPress={() => null}>
+                  <Image source={fbLogo} style={styles.fbLogo} />
+                  <Text style={styles.signupFooterPressableText}>
+                    {fbUser ? `Continue with ${fbUser}` : `Login with Facebook`}
+                  </Text>
+                </Pressable>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
         )}
       </Formik>
 
       <View style={styles.signupFooter}>
         <View style={styles.signupFooterContainer}>
-          <Text>You don't have an account yet?</Text>
+          <Text style={styles.signupFooterText}>
+            You don't have an account yet?
+          </Text>
           <Pressable onPress={() => navigation.navigate('Signup')}>
             <Text style={styles.signupFooterPressableText}>Sign up</Text>
           </Pressable>
@@ -163,9 +243,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
   },
-  keyboardAvoidingContainer: { flex: 1 },
   logoContainer: {
     alignItems: 'center',
   },
@@ -182,13 +260,55 @@ const styles = StyleSheet.create({
     color: themes.blueColor,
     textAlign: 'right',
     marginVertical: 5,
+    fontSize: 13,
+  },
+  loginFb: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  fbLogo: {
+    width: 15,
+    height: 15,
+    marginTop: 2,
+  },
+  border: {
+    position: 'relative',
+    marginVertical: 20,
+    width: Constants.width / 1.2,
+    alignContent: 'center',
+  },
+  borderText: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    top: -13,
+    left: Constants.width / 3,
+    width: 80,
+    color: themes.darkGreyColor,
+    fontSize: 15,
+    textAlign: 'center',
   },
   signupFooter: {
+    borderTopWidth: 0.8,
     position: 'absolute',
     bottom: 10,
+    borderTopColor: themes.lightGreyColor,
+    width: Constants.width / 1,
   },
-  signupFooterContainer: { flexDirection: 'row', justifyContent: 'center' },
-  signupFooterPressableText: { color: themes.blueColor, marginLeft: 5 },
+  signupFooterContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 10,
+    marginBottom: 5,
+  },
+  signupFooterText: {
+    color: themes.darkGreyColor,
+  },
+  signupFooterPressableText: {
+    color: themes.blueColor,
+    marginLeft: 5,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
 });
 
 const loginValidationSchema = yup.object().shape({

@@ -5,12 +5,13 @@ import {
   Pressable,
   StyleSheet,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import constants from './Constants';
 import themes from '../contexts/ThemeContext';
 
-const AuthButton = ({ text, onPress, disabled, loading = false }) => (
+const AuthButton = ({ text, onPress, disabled, loading = false, image }) => (
   <Pressable onPress={onPress} disabled={disabled && loading}>
     <View
       style={
@@ -22,7 +23,10 @@ const AuthButton = ({ text, onPress, disabled, loading = false }) => (
       {loading ? (
         <ActivityIndicator color={'white'} />
       ) : (
-        <Text style={styles.text}>{text}</Text>
+        <View style={styles.innerContainer}>
+          {image ? <Image source={image} style={styles.image} /> : null}
+          <Text style={styles.text}>{text}</Text>
+        </View>
       )}
     </View>
   </Pressable>
@@ -31,6 +35,7 @@ const AuthButton = ({ text, onPress, disabled, loading = false }) => (
 AuthButton.propTypes = {
   loading: PropTypes.bool,
   disabled: PropTypes.bool,
+  image: PropTypes.number,
   text: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
 };
@@ -49,7 +54,15 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
     fontSize: 13,
-    fontWeight: '800',
+    fontWeight: 'bold',
+  },
+  image: {
+    width: 20,
+    height: 20,
+    marginRight: 10,
+  },
+  innerContainer: {
+    flexDirection: 'row',
   },
 });
 
