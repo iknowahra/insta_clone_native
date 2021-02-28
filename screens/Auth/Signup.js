@@ -140,7 +140,9 @@ export default ({ navigation, route }) => {
         </View>
         <Pressable
           onPress={() =>
-            navigation.navigate('SignupStr', { email: route.params.email })
+            navigation.navigate('SignupStr', {
+              email: (route.params && route.params.email) || '',
+            })
           }
         >
           <Text style={styles.PressableText}>Sign up with email</Text>

@@ -22,7 +22,7 @@ function AuthHome({ navigation, route }) {
         <AuthButton
           text={`Let's connect!`}
           onPress={() => {
-            navigation.navigate('Login'), { email: route.params.email };
+            navigation.navigate('Login', { email: route.params.email });
           }}
         />
       </View>
