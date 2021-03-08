@@ -7,6 +7,7 @@ export const LOG_IN = gql`
       token
       error
       user {
+        id
         confirmSecret
       }
     }
@@ -19,6 +20,7 @@ export const LOG_IN_FB = gql`
       token
       error
       user {
+        id
         confirmSecret
       }
     }

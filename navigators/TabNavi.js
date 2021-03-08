@@ -8,19 +8,23 @@ import Search from '../screens/Main/Search';
 import PhotoNavigation from './PhotoNavi';
 import Logo from '../assets/logoLetter.png';
 import themes from '../contexts/ThemeContext';
-import { Image, Button, Platform, Pressable } from 'react-native';
-import { Ionicons, AntDesign } from '@expo/vector-icons';
+import { Image, Button, Platform, Pressable, View, Text } from 'react-native';
+import { Ionicons, AntDesign, FontAwesome } from '@expo/vector-icons';
+import Comments from '../screens/Main/Comments';
+import Result from '../components/Result';
+import SearchBar from '../components/SearchBar';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const stackFactory = (initialRoute, name, customConfig) => (
+const stackFactory = (initialRoute, name, customConfig, sibling) => (
   <Stack.Navigator>
     <Stack.Screen
       name={name}
       component={initialRoute}
       options={{ ...customConfig }}
     />
+    {sibling}
   </Stack.Navigator>
 );
 
@@ -28,6 +32,7 @@ export default function TabNavigation({ navigation, previous }) {
   return (
     <Tab.Navigator
       mode="modal"
+      initialRouteName="Search"
       tabBarOptions={{
         showLabel: false,
         tabStyle: {
@@ -56,34 +61,41 @@ export default function TabNavigation({ navigation, previous }) {
         }}
       >
         {() =>
-          stackFactory(Home, 'Home', {
-            headerTitle: () => (
-              <Image source={Logo} style={{ width: 120, height: 60 }} />
-            ),
-            headerLeft: () => (
-              <Pressable onPress={() => null}>
-                <Ionicons
-                  name={Platform.OS === 'ios' ? 'ios-camera' : 'md-camera'}
-                  size={33}
-                  style={{ marginLeft: 20 }}
-                />
-              </Pressable>
-            ),
-            headerTitleAlign: 'center',
-            headerRight: () => (
-              <Pressable
-                onPress={() => navigation.navigate('MessageNavigation')}
-              >
-                <Ionicons
-                  name={
-                    Platform.OS === 'ios' ? 'ios-paper-plane' : 'md-paper-plane'
-                  }
-                  size={28}
-                  style={{ marginRight: 20 }}
-                />
-              </Pressable>
-            ),
-          })
+          stackFactory(
+            Home,
+            'Home',
+            {
+              headerTitle: () => (
+                <Image source={Logo} style={{ width: 110, height: 50 }} />
+              ),
+              headerLeft: () => (
+                <Pressable onPress={() => null}>
+                  <Ionicons
+                    name={Platform.OS === 'ios' ? 'ios-camera' : 'md-camera'}
+                    size={30}
+                    style={{ marginLeft: 10 }}
+                  />
+                </Pressable>
+              ),
+              headerTitleAlign: 'center',
+              headerRight: () => (
+                <Pressable
+                  onPress={() => navigation.navigate('MessageNavigation')}
+                >
+                  <Ionicons
+                    name={
+                      Platform.OS === 'ios'
+                        ? 'ios-paper-plane-outline'
+                        : 'md-paper-plane-outline'
+                    }
+                    size={26}
+                    style={{ marginRight: 10 }}
+                  />
+                </Pressable>
+              ),
+            },
+            <Stack.Screen name="Comments" component={Comments} />,
+          )
         }
       </Tab.Screen>
       <Tab.Screen
@@ -107,13 +119,35 @@ export default function TabNavigation({ navigation, previous }) {
         }}
       >
         {() =>
-          stackFactory(Search, 'Search', {
-            headerLeft: () => {
-              previous ? (
-                <Button text="back" onPress={navigation.goBack} />
-              ) : undefined;
+          stackFactory(
+            Search,
+            'Search',
+            {
+              headerTitle: () => <SearchBar />,
+              headerTitleAlign: 'center',
             },
-          })
+            <Stack.Screen
+              name="Result"
+              component={Result}
+              options={({ route }) => ({
+                headerTitle: () => (
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <FontAwesome name="search" size={20} color="black" />
+                    <Text
+                      style={{
+                        marginLeft: 10,
+                        fontSize: 20,
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      " {route.params.term} "
+                    </Text>
+                  </View>
+                ),
+                headerTitleAlign: 'center',
+              })}
+            />,
+          )
         }
       </Tab.Screen>
       <Tab.Screen

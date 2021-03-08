@@ -6,11 +6,10 @@ import AuthNavigation from '../navigators/AuthNavi';
 import MainNavigation from '../navigators/MainNavi';
 
 export default ({ isLoggedIn }) => {
-  const [isLogin, setLogin] = useState(isLoggedIn);
   const checkUserLogin = useReactiveVar(isLogginVar);
   return (
     <NavigationContainer>
-      {isLogin || checkUserLogin ? <MainNavigation /> : <AuthNavigation />}
+      {isLoggedIn || checkUserLogin ? <MainNavigation /> : <AuthNavigation />}
     </NavigationContainer>
   );
 };

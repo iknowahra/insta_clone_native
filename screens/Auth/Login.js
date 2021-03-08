@@ -1,5 +1,3 @@
-// 텍스트 인풋 누르면 화면 올라가는 거 지웠는데 왜 올라가지...?
-// 레이아웃 손볼 것
 import React, { useState, useEffect } from 'react';
 import {
   Image,
@@ -14,12 +12,12 @@ import {
 } from 'react-native';
 import * as yup from 'yup';
 import { Formik } from 'formik';
-import { useMutation } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Facebook from 'expo-facebook';
 
 import { LOG_IN, LOG_IN_FB } from './Queries';
-import { isLogginVar } from '../../contexts/AuthContext';
+import { getUserId, isLogginVar } from '../../contexts/AuthContext';
 import themes from '../../contexts/ThemeContext';
 import logo from '../../assets/logoLetter.png';
 import fbLogo from '../../assets/facebookBlue.png';
@@ -71,6 +69,7 @@ export default ({ navigation, route }) => {
           }
         } else {
           await AsyncStorage.setItem('token', loginEmail.token);
+          getUserId(loginEmail.user.id);
           if (!loginEmail.user.confirmSecret) {
             Alert.alert(
               'Validate Email Addresses',
@@ -136,10 +135,12 @@ export default ({ navigation, route }) => {
             },
           });
 
-          if (!loginFb.ok) {
+          if (loginFb.error) {
             Alert.alert('Error', loginFb.error);
           } else {
             await AsyncStorage.setItem('token', loginFb.token);
+            await AsyncStorage.setItem('isLoggedIn', 'true');
+            getUserId(loginFb.user.id);
             setFbLogin(true);
           }
         }
@@ -153,10 +154,12 @@ export default ({ navigation, route }) => {
     if (isLogin) {
       isLogginVar(true);
     }
-  }, []);
+  }, [isLogin]);
+
   useEffect(() => {
     preLoad();
   }, []);
+
   return (
     <View style={styles.container}>
       <Formik
