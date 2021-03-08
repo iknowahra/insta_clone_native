@@ -11,7 +11,7 @@ import backgroundImage from '../../assets/backgroundGradient.png';
 import AuthButton from '../../components/AuthButton';
 import Constants from '../../components/Constants';
 import { LOG_IN_FB, CHECK_USER } from './Queries';
-import { isLogginVar } from '../../contexts/AuthContext';
+import { isLogginVar, getUserId } from '../../contexts/AuthContext';
 
 export default ({ navigation, route }) => {
   const [fbUser, setFbUser] = useState('');
@@ -91,10 +91,12 @@ export default ({ navigation, route }) => {
             },
           });
 
-          if (!loginFb.ok) {
+          if (loginFb.error) {
             Alert.alert('Error', loginFb.error);
           } else {
             await AsyncStorage.setItem('token', loginFb.token);
+            await AsyncStorage.setItem('isLoggedIn', 'true');
+            getUserId(loginFb.user.id);
             setFbLogin(true);
           }
         }
@@ -140,7 +142,9 @@ export default ({ navigation, route }) => {
         </View>
         <Pressable
           onPress={() =>
-            navigation.navigate('SignupStr', { email: route.params.email })
+            navigation.navigate('SignupStr', {
+              email: (route.params && route.params.email) || '',
+            })
           }
         >
           <Text style={styles.PressableText}>Sign up with email</Text>

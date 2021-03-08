@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 
 export default () => (
   <View style={styles.container}>
-    <Text>Search</Text>
+    <Text>Comments</Text>
   </View>
 );
 

@@ -1,11 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { useReactiveVar } from '@apollo/client';
 import { Image, StyleSheet, AppRegistry, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import logo from './assets/logoLetter.png';
 import { options, cache } from './Apollo';
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { ApolloClient, ApolloProvider } from '@apollo/client';
 import { CachePersistor, AsyncStorageWrapper } from 'apollo3-cache-persist';
 import NavController from './components/NavControllers';
 const SCHEMA_VERSION = '3';

@@ -1,5 +1,3 @@
-// 텍스트 인풋 누르면 화면 올라가는 거 지웠는데 왜 올라가지...?
-// 레이아웃 손볼 것
 import React, { useState, useEffect } from 'react';
 import {
   Image,
@@ -8,16 +6,18 @@ import {
   StyleSheet,
   Pressable,
   Keyboard,
+  Dimensions,
   TouchableWithoutFeedback,
   Alert,
 } from 'react-native';
 import * as yup from 'yup';
 import { Formik } from 'formik';
-import { useMutation } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Facebook from 'expo-facebook';
 
 import { LOG_IN, LOG_IN_FB } from './Queries';
-import { isLogginVar } from '../../contexts/AuthContext';
+import { getUserId, isLogginVar } from '../../contexts/AuthContext';
 import themes from '../../contexts/ThemeContext';
 import logo from '../../assets/logoLetter.png';
 import fbLogo from '../../assets/facebookBlue.png';
@@ -44,6 +44,7 @@ export default ({ navigation, route }) => {
       setLogin(true);
     }
   };
+
   const onhandleSubmit = async (values) => {
     try {
       setLoading(true);
@@ -68,6 +69,7 @@ export default ({ navigation, route }) => {
           }
         } else {
           await AsyncStorage.setItem('token', loginEmail.token);
+          getUserId(loginEmail.user.id);
           if (!loginEmail.user.confirmSecret) {
             Alert.alert(
               'Validate Email Addresses',
@@ -133,10 +135,12 @@ export default ({ navigation, route }) => {
             },
           });
 
-          if (!loginFb.ok) {
+          if (loginFb.error) {
             Alert.alert('Error', loginFb.error);
           } else {
             await AsyncStorage.setItem('token', loginFb.token);
+            await AsyncStorage.setItem('isLoggedIn', 'true');
+            getUserId(loginFb.user.id);
             setFbLogin(true);
           }
         }
@@ -151,9 +155,11 @@ export default ({ navigation, route }) => {
       isLogginVar(true);
     }
   }, [isLogin]);
+
   useEffect(() => {
     preLoad();
   }, []);
+
   return (
     <View style={styles.container}>
       <Formik
@@ -204,15 +210,10 @@ export default ({ navigation, route }) => {
                   loading={loading}
                   disabled={!isValid}
                 />
-                <View
-                  style={{
-                    ...styles.signupFooter,
-                    ...styles.border,
-                  }}
-                >
+                <View style={styles.border}>
                   <Text style={styles.borderText}>OR</Text>
                 </View>
-                <Pressable style={styles.loginFb} onPress={() => null}>
+                <Pressable style={styles.loginFb} onPress={fbLogin}>
                   <Image source={fbLogo} style={styles.fbLogo} />
                   <Text style={styles.signupFooterPressableText}>
                     {fbUser ? `Continue with ${fbUser}` : `Login with Facebook`}
@@ -223,7 +224,6 @@ export default ({ navigation, route }) => {
           </View>
         )}
       </Formik>
-
       <View style={styles.signupFooter}>
         <View style={styles.signupFooterContainer}>
           <Text style={styles.signupFooterText}>
@@ -241,6 +241,7 @@ export default ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    height: Dimensions.get('window').height,
     backgroundColor: '#fff',
     alignItems: 'center',
   },
@@ -253,7 +254,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   innerContainer: {
-    flex: 1,
+    marginTop: 100,
     justifyContent: 'center',
   },
   lostPasswordText: {
@@ -274,11 +275,12 @@ const styles = StyleSheet.create({
   border: {
     position: 'relative',
     marginVertical: 20,
-    width: Constants.width / 1.2,
     alignContent: 'center',
+    justifyContent: 'center',
+    borderTopColor: themes.lightGreyColor,
+    borderTopWidth: 0.8,
   },
   borderText: {
-    position: 'absolute',
     backgroundColor: 'white',
     top: -13,
     left: Constants.width / 3,
@@ -289,10 +291,10 @@ const styles = StyleSheet.create({
   },
   signupFooter: {
     borderTopWidth: 0.8,
-    position: 'absolute',
-    bottom: 10,
+    position: 'relative',
+    bottom: -130,
     borderTopColor: themes.lightGreyColor,
-    width: Constants.width / 1,
+    width: Constants.width,
   },
   signupFooterContainer: {
     flexDirection: 'row',
