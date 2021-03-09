@@ -9,9 +9,9 @@ import PhotoNavigation from './PhotoNavi';
 import Logo from '../assets/logoLetter.png';
 import themes from '../contexts/ThemeContext';
 import { Image, Button, Platform, Pressable, View, Text } from 'react-native';
-import { Ionicons, AntDesign, FontAwesome } from '@expo/vector-icons';
+import { Ionicons, AntDesign, FontAwesome, Feather } from '@expo/vector-icons';
 import Comments from '../screens/Main/Comments';
-import Result from '../components/Result';
+import Result from '../screens/Main/Result';
 import SearchBar from '../components/SearchBar';
 
 const Stack = createStackNavigator();
@@ -131,8 +131,7 @@ export default function TabNavigation({ navigation, previous }) {
               component={Result}
               options={({ route }) => ({
                 headerTitle: () => (
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <FontAwesome name="search" size={20} color="black" />
+                  <View>
                     <Text
                       style={{
                         marginLeft: 10,
@@ -140,11 +139,16 @@ export default function TabNavigation({ navigation, previous }) {
                         fontWeight: 'bold',
                       }}
                     >
-                      " {route.params.term} "
+                      {route.params.term}
                     </Text>
                   </View>
                 ),
                 headerTitleAlign: 'center',
+                headerRight: () => (
+                  <Pressable style={{ marginRight: 25 }} onPress={() => null}>
+                    <Feather name="more-horizontal" size={24} />
+                  </Pressable>
+                ),
               })}
             />,
           )

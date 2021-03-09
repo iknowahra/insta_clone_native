@@ -3,8 +3,6 @@ import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import Loader from '../../components/Loader';
 import { useQuery, gql } from '@apollo/client';
 import Feed from '../../components/Feed';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Constants from '../../components/Constants';
 
 const FEED_QUERY = gql`
   {
