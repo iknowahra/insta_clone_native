@@ -81,7 +81,7 @@ export default ({ route }) => {
     }
   });
 
-  const preload = (value) => {
+  const onfetch = (value) => {
     try {
       setLoading(true);
       if (searchUser) {
@@ -104,7 +104,7 @@ export default ({ route }) => {
   };
 
   useEffect(() => {
-    preload(term);
+    onfetch(term);
   }, []);
 
   return (
