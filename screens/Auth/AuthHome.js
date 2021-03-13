@@ -1,11 +1,9 @@
 import * as React from 'react';
-import { useMutation } from '@apollo/client';
-import { TouchableOpacity, View, Text, Image, StyleSheet } from 'react-native';
-
+import { View, Text, Image, StyleSheet } from 'react-native';
 import logo from '../../assets/logoLetter.png';
 import themes from '../../contexts/ThemeContext';
 import backgroundImage from '../../assets/backgroundGradient.png';
-import AuthButton from '../../components/AuthButton';
+import AuthButton from '../../components/Auth/AuthButton';
 
 function AuthHome({ navigation, route }) {
   return (
@@ -13,7 +11,7 @@ function AuthHome({ navigation, route }) {
       <Image source={backgroundImage} style={styles.backgroundImage} />
       <Text
         style={styles.welcomeHead}
-      >{`Welcome, ${route.params.username}`}</Text>
+      >{`Welcome, ${route.params?.username}`}</Text>
       <Image source={logo} style={styles.logo} />
       <Text
         style={styles.welcomeHeadText}

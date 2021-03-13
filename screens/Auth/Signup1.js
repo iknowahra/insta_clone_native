@@ -13,11 +13,11 @@ import { useLazyQuery } from '@apollo/client';
 
 import { CHECK_USER } from './Queries';
 import themes from '../../contexts/ThemeContext';
-import AuthButton from '../../components/AuthButton';
-import AuthInput from '../../components/AuthInput';
+import AuthButton from '../../components/Auth/AuthButton';
+import AuthInput from '../../components/Auth/AuthInput';
 
 export default ({ navigation, route }) => {
-  const email = (route.params && route.params.email) || '';
+  const email = route.params?.email;
   const [loading, setLoading] = useState(false);
   const [checkUserValidationQuery, { data }] = useLazyQuery(CHECK_USER, {
     fetchPolicy: 'no-cache',

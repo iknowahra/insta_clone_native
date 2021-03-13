@@ -1,6 +1,11 @@
 import { createHttpLink, InMemoryCache } from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { isLogginVar, getUserId, typeDefs } from './contexts/AuthContext';
+import {
+  isLogginVar,
+  getUserId,
+  getUserName,
+  typeDefs,
+} from './contexts/AuthContext';
 import { setContext } from '@apollo/client/link/context';
 
 const httpLink = createHttpLink({
@@ -19,6 +24,11 @@ export const cache = new InMemoryCache({
         getUserId: {
           read() {
             return getUserId();
+          },
+        },
+        getUserName: {
+          read() {
+            return getUserName();
           },
         },
       },

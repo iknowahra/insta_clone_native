@@ -8,10 +8,14 @@ import themes from '../../contexts/ThemeContext';
 import logo from '../../assets/logoLetterWhite.png';
 import fbLogo from '../../assets/facebookWhite.png';
 import backgroundImage from '../../assets/backgroundGradient.png';
-import AuthButton from '../../components/AuthButton';
+import AuthButton from '../../components/Auth/AuthButton';
 import Constants from '../../components/Constants';
 import { LOG_IN_FB, CHECK_USER } from './Queries';
-import { isLogginVar, getUserId } from '../../contexts/AuthContext';
+import {
+  isLogginVar,
+  getUserId,
+  getUserName,
+} from '../../contexts/AuthContext';
 
 export default ({ navigation, route }) => {
   const [fbUser, setFbUser] = useState('');
@@ -97,6 +101,7 @@ export default ({ navigation, route }) => {
             await AsyncStorage.setItem('token', loginFb.token);
             await AsyncStorage.setItem('isLoggedIn', 'true');
             getUserId(loginFb.user.id);
+            getUserName(loginFb.user.userNames);
             setFbLogin(true);
           }
         }
@@ -143,7 +148,7 @@ export default ({ navigation, route }) => {
         <Pressable
           onPress={() =>
             navigation.navigate('SignupStr', {
-              email: (route.params && route.params.email) || '',
+              email: route.params?.email,
             })
           }
         >

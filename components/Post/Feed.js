@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+// there is still a t
+import React, { useState, useEffect, useCallback } from 'react';
 import { useMutation, gql } from '@apollo/client';
 import { useNavigation } from '@react-navigation/native';
 import PropTypes from 'prop-types';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { Image, View, StyleSheet, Text, Pressable } from 'react-native';
 import Swiper from 'react-native-swiper';
-import constants from './Constants';
-import UserBold from './Username';
-import themes from '../contexts/ThemeContext';
+
+import constants from '../Constants';
+import UserBold from '../Username';
+import themes from '../../contexts/ThemeContext';
 import * as timeago from 'timeago.js';
 
 const TOGGLE_LIKE = gql`
@@ -29,6 +31,7 @@ const Feed = ({
   commentCount,
 }) => {
   const navigation = useNavigation();
+  const [numLines, setNumLines] = useState(0);
   const [comments, setComments] = useState(commentsProp);
   const [amILiking, setLike] = useState(amILikingProp);
   const [likeCount, setLikeCount] = useState(likeCountProp);
@@ -55,6 +58,10 @@ const Feed = ({
       console.log('toggleLikeError', e);
     }
   };
+
+  const onReadMore = useCallback((e) => {
+    setNumLines(e.nativeEvent.lines.length);
+  }, []);
 
   useEffect(() => Preload(), []);
 
@@ -109,56 +116,35 @@ const Feed = ({
         <Pressable onPress={() => null}>
           <Text style={styles.username}>{likeCount} likes</Text>
         </Pressable>
-
-        <View style={styles.comments}>
-          <UserBold username={user.userName} />
+        <View style={{ flexDirection: 'row' }}>
           <Text
-            numberOfLines={caption.length <= 45 ? 1 : 2}
-            style={styles.userCommentContainer}
-            onPress={() => navigation.navigate('Comments')}
-            textBreakStrategy="highQuality"
+            style={styles.comments}
+            onTextLayout={onReadMore}
+            numberOfLines={2}
           >
-            {caption}
-          </Text>
-          <Text
-            style={{
-              ...styles.hiddenText,
-              textAlignVertical: caption.length <= 45 ? 'center' : 'bottom',
-            }}
-          >
-            more
+            <UserBold username={`${user.userName} `} />
+            <Text
+              style={styles.userCommentContainer}
+              onPress={() => navigation.navigate('Comments', { postId: id })}
+            >
+              {caption}
+            </Text>
           </Text>
         </View>
-        {commentCount >= 2 ? (
-          <Text
-            style={styles.hiddenText}
-            onPress={() => navigation.navigate('Comments')}
-          >
-            See
-            {commentCount - comments.length === 1
-              ? ` 1 comment`
-              : `all of ${commentCount - comments.length} comments`}
-          </Text>
-        ) : !comments.length ? (
-          <Text
-            style={styles.hiddenText}
-            onPress={() => navigation.navigate('Comments')}
-          >
-            See 1 comment
-          </Text>
-        ) : null}
+        <View>
+          {commentCount && !!(commentCount - comments.length) ? (
+            <Text style={styles.hiddenText}>
+              {`See all ${commentCount - comments.length} comments`}
+            </Text>
+          ) : null}
+        </View>
+
         {comments &&
           comments.map((comment, index) => (
-            <View key={String(index)} style={styles.comments}>
-              <UserBold username={comment.userName} />
-              <Text
-                style={styles.userCommentContainer}
-                textBreakStrategy="highQuality"
-                numberOfLines={1}
-              >
-                {comment.text}
-              </Text>
-            </View>
+            <Text key={String(index)} style={styles.comments} numberOfLines={1}>
+              <UserBold username={`${comment.userName} `} />
+              <Text style={styles.userCommentContainer}>{comment.text}</Text>
+            </Text>
           ))}
         <View>
           <Text style={styles.date}>{timeago.format(new Date(createdAt))}</Text>
@@ -181,7 +167,7 @@ const styles = StyleSheet.create({
   headerCaption: {},
   avatar: { width: 35, height: 35, borderRadius: 20, marginRight: 10 },
   username: { fontWeight: 'bold', fontSize: 18 },
-  location: { fontSize: 14, marginTop: -4 },
+  location: { fontSize: 13, marginTop: -2 },
   moreIcon: { position: 'absolute', right: 5 },
   swiperContainer: {
     maxHeight: constants.height / 1.5,
@@ -196,17 +182,13 @@ const styles = StyleSheet.create({
   },
   reactionLike: { marginRight: 20, marginBottom: 2 },
   reactionChat: { marginRight: 20 },
-  comments: {
-    flexDirection: 'row',
-  },
+  comments: { flexDirection: 'row', flex: 1 },
   userCommentContainer: {
-    flexDirection: 'row',
-    flex: 1,
     flexGrow: 1,
-    fontSize: 17,
+    fontSize: 15,
   },
   hiddenText: {
-    fontSize: 17,
+    fontSize: 15,
     color: themes.darkGreyColor,
   },
   date: { color: themes.darkGreyColor },

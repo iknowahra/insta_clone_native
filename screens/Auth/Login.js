@@ -17,16 +17,20 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Facebook from 'expo-facebook';
 
 import { LOG_IN, LOG_IN_FB } from './Queries';
-import { getUserId, isLogginVar } from '../../contexts/AuthContext';
+import {
+  getUserId,
+  getUserName,
+  isLogginVar,
+} from '../../contexts/AuthContext';
 import themes from '../../contexts/ThemeContext';
 import logo from '../../assets/logoLetter.png';
 import fbLogo from '../../assets/facebookBlue.png';
-import AuthButton from '../../components/AuthButton';
-import AuthInput from '../../components/AuthInput';
+import AuthButton from '../../components/Auth/AuthButton';
+import AuthInput from '../../components/Auth/AuthInput';
 import Constants from '../../components/Constants';
 
 export default ({ navigation, route }) => {
-  const email = (route.params && route.params.email) || '';
+  const email = route.params?.email;
   const [loading, setLoading] = useState(false);
   const [isLogin, setLogin] = useState(false);
   const [fbUser, setFbUser] = useState('');
@@ -70,6 +74,7 @@ export default ({ navigation, route }) => {
         } else {
           await AsyncStorage.setItem('token', loginEmail.token);
           getUserId(loginEmail.user.id);
+          getUserName(loginEmail.user.userName);
           if (!loginEmail.user.confirmSecret) {
             Alert.alert(
               'Validate Email Addresses',
@@ -141,6 +146,7 @@ export default ({ navigation, route }) => {
             await AsyncStorage.setItem('token', loginFb.token);
             await AsyncStorage.setItem('isLoggedIn', 'true');
             getUserId(loginFb.user.id);
+            getUserName(loginFb.user.userName);
             setFbLogin(true);
           }
         }

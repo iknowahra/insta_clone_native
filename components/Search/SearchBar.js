@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
-import UseInput from './UseInput';
-import themes from '../contexts/ThemeContext';
-import constants from './Constants';
+import UseInput from '../UseInput';
+import themes from '../../contexts/ThemeContext';
+import constants from '../Constants';
 
 const SearchBar = () => {
   const [value, onChangeText] = useState('');

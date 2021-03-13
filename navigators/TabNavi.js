@@ -1,23 +1,33 @@
 import * as React from 'react';
+import { Image, Platform, Pressable, View, Text } from 'react-native';
+import { Ionicons, AntDesign, Feather } from '@expo/vector-icons';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screens/Main/Home';
 import Notification from '../screens/Main/Notification';
-import Profile from '../screens/Main/Profile';
-import Search from '../screens/Main/Search';
+import Profile from '../screens/Main/Profile/Profile';
+import YourProfile from '../screens/Main/Profile/YourProfile';
+import Search from '../screens/Main/Search/Search';
+import Comments from '../screens/Main/Comments';
+import Result from '../screens/Main/Search/SearchResult';
+import SearchBar from '../components/Search/SearchBar';
 import PhotoNavigation from './PhotoNavi';
+import UserPosts from '../components/Post/UserPosts';
+import LogoutButton from '../components/Auth/LogoutButton';
 import Logo from '../assets/logoLetter.png';
 import themes from '../contexts/ThemeContext';
-import { Image, Button, Platform, Pressable, View, Text } from 'react-native';
-import { Ionicons, AntDesign, FontAwesome, Feather } from '@expo/vector-icons';
-import Comments from '../screens/Main/Comments';
-import Result from '../screens/Main/Result';
-import SearchBar from '../components/SearchBar';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const stackFactory = (initialRoute, name, customConfig, sibling) => (
+const stackFactory = (
+  initialRoute,
+  name,
+  customConfig,
+  sibling,
+  sibling2,
+  sibling3,
+) => (
   <Stack.Navigator>
     <Stack.Screen
       name={name}
@@ -25,14 +35,16 @@ const stackFactory = (initialRoute, name, customConfig, sibling) => (
       options={{ ...customConfig }}
     />
     {sibling}
+    {sibling2}
+    {sibling3}
   </Stack.Navigator>
 );
 
-export default function TabNavigation({ navigation, previous }) {
+export default function TabNavigation({ navigation }) {
   return (
     <Tab.Navigator
       mode="modal"
-      initialRouteName="Search"
+      initialRouteName="Home"
       tabBarOptions={{
         showLabel: false,
         tabStyle: {
@@ -94,7 +106,28 @@ export default function TabNavigation({ navigation, previous }) {
                 </Pressable>
               ),
             },
-            <Stack.Screen name="Comments" component={Comments} />,
+            <Stack.Screen
+              name="Comments"
+              component={Comments}
+              options={{
+                headerTitleAlign: 'center',
+                headerRight: () => (
+                  <Pressable
+                    onPress={() => navigation.navigate('MessageNavigation')}
+                  >
+                    <Ionicons
+                      name={
+                        Platform.OS === 'ios'
+                          ? 'ios-paper-plane-outline'
+                          : 'md-paper-plane-outline'
+                      }
+                      size={26}
+                      style={{ marginRight: 10 }}
+                    />
+                  </Pressable>
+                ),
+              }}
+            />,
           )
         }
       </Tab.Screen>
@@ -151,6 +184,12 @@ export default function TabNavigation({ navigation, previous }) {
                 ),
               })}
             />,
+            <Stack.Screen
+              name="UserPosts"
+              component={UserPosts}
+              options={{ headerTitle: 'Explore', headerTitleAlign: 'center' }}
+            />,
+            <Stack.Screen name={'YourProfile'} component={YourProfile} />,
           )
         }
       </Tab.Screen>
@@ -219,10 +258,45 @@ export default function TabNavigation({ navigation, previous }) {
         }}
       >
         {() =>
-          stackFactory(Profile, 'Profile', {
-            title: 'Profile',
-            headerRight: () => <Button title="Profile"></Button>,
-          })
+          stackFactory(
+            Profile,
+            'Profile',
+            {
+              headerRight: () => <LogoutButton />,
+              headerTitleAlign: 'center',
+            },
+            <Stack.Screen name="Comments" component={Comments} />,
+            <Stack.Screen
+              name="UserPosts"
+              component={UserPosts}
+              options={({ route }) => ({
+                headerTitle: (
+                  <View>
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        textAlign: 'center',
+                        fontWeight: 'bold',
+                        color: themes.darkGreyColor,
+                      }}
+                    >
+                      {route.params.tabTitle}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        fontWeight: 'bold',
+                        textAlign: 'center',
+                      }}
+                    >
+                      Posts
+                    </Text>
+                  </View>
+                ),
+                headerTitleAlign: 'center',
+              })}
+            />,
+          )
         }
       </Tab.Screen>
     </Tab.Navigator>

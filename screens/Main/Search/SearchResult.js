@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react';
-import { gql, useLazyQuery } from '@apollo/client';
+import React, { useState, useCallback, useEffect } from 'react';
+import { useLazyQuery } from '@apollo/client';
 import {
   Text,
   StyleSheet,
@@ -8,66 +8,27 @@ import {
   RefreshControl,
   Image,
   Alert,
+  Pressable,
 } from 'react-native';
-import Username from '../../components/Username';
-import Loader from '../../components/Loader';
-import { useEffect } from 'react';
-import themes from '../../contexts/ThemeContext';
-import Constants from '../../components/Constants';
-import SquarePost from '../../components/SquarePost.js';
-import SearchHeader from '../../components/SearchHeader';
+import Username from '../../../components/Username';
+import Loader from '../../../components/Loader';
+import themes from '../../../contexts/ThemeContext';
+import Constants from '../../../components/Constants';
+import SquarePost from '../../../components/Post/SquarePost.js.js';
+import SearchHeader from '../../../components/Search/SearchHeader';
+import { SEARCH_USER, SEARCH_POST } from '../../../contexts/Queries';
 
-export const SEARCH_USER = gql`
-  query searchUser($term: String!) {
-    searchUser(term: $term) {
-      id
-      avatar
-      userName
-      amIFollowing
-      itsMe
-      bio
-      followers {
-        id
-        userName
-        avatar
-      }
-      following {
-        id
-        userName
-        avatar
-      }
-    }
-  }
-`;
-export const SEARCH_POST = gql`
-  query searchPost($term: String!) {
-    searchPost(term: $term) {
-      caption
-      location
-      user {
-        userName
-      }
-      files {
-        url
-      }
-      likeCount
-      commentCount
-    }
-  }
-`;
-
-export default ({ route }) => {
-  const { term } = route.params;
+export default ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [searchUser, setSearchMode] = useState(term[0] !== '#');
+  const [searchUser, setSearchMode] = useState(route.params?.term[0] !== '#');
   const [
     getSearchUsers,
-    { loading: userLoading, data: userData, refetch: userRefetch },
+    { data: userData, refetch: userRefetch },
   ] = useLazyQuery(SEARCH_USER, { nextFetchPolicy: 'network-only' });
   const [
     getSearchPosts,
-    { loading: postLoading, data: postData, refetch: postRefetch },
+    { data: postData, refetch: postRefetch },
   ] = useLazyQuery(SEARCH_POST, { nextFetchPolicy: 'network-only' });
 
   const onRefresh = useCallback(async () => {
@@ -104,9 +65,10 @@ export default ({ route }) => {
   };
 
   useEffect(() => {
-    onfetch(term);
+    onfetch(route.params?.term);
   }, []);
 
+  console.log(postData);
   return (
     <View style={styles.container}>
       <ScrollView
@@ -118,9 +80,9 @@ export default ({ route }) => {
       >
         {loading && <Loader />}
         {searchUser ? (
-          userData && userData.searchUser[0] ? (
-            userData.searchUser.map((user, index) => (
-              <View style={styles.userContainer} key={index}>
+          userData?.searchUser[0] ? (
+            userData?.searchUser?.map((user, index) => (
+              <Pressable style={styles.userContainer} key={index}>
                 {user.avatar ? (
                   <Image source={{ uri: user.avatar }} style={styles.avatar} />
                 ) : (
@@ -142,14 +104,14 @@ export default ({ route }) => {
                     {user.bio}
                   </Text>
                 </View>
-              </View>
+              </Pressable>
             ))
           ) : (
             <View style={{ marginHorizontal: 15 }}>
               <Text style={styles.greySmallText}>There is no result.</Text>
             </View>
           )
-        ) : !loading && postData && postData.searchPost[0] ? (
+        ) : !loading && postData?.searchPost[0] ? (
           <View style={styles.postContainer}>
             <SearchHeader
               uri={
@@ -161,25 +123,26 @@ export default ({ route }) => {
             />
             <View style={styles.photoContainer}>
               {postData.searchPost.map((post, index) => (
-                <SquarePost {...post} key={index} index={index} />
+                <SquarePost
+                  {...post}
+                  key={index}
+                  index={index}
+                  posts={postData.searchPost}
+                />
               ))}
             </View>
           </View>
         ) : (
-          <View style={{ marginHorizontal: 15 }}>
-            <Text style={styles.greySmallText}>There is no result.</Text>
-          </View>
+          !loading && (
+            <View style={{ marginHorizontal: 15 }}>
+              <Text style={styles.greySmallText}>There is no result.</Text>
+            </View>
+          )
         )}
       </ScrollView>
     </View>
   );
 };
-
-/* {!postData.searchPost.length && (
-  <View>
-    <Text style={styles.greySmallText}>There is no result.</Text>
-  </View>
-)} */
 
 const styles = StyleSheet.create({
   container: {

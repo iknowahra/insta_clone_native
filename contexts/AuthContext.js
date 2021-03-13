@@ -19,6 +19,14 @@ export const USER_ID = gql`
   }
 `;
 
+export const USERNAME = gql`
+  query getUserName {
+    getUserName @client
+  }
+`;
+
 export const isLogginVar = makeVar(false);
 
 export const getUserId = makeVar(null);
+
+export const getUserName = makeVar(null);

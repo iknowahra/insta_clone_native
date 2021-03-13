@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import UseInput from './UseInput';
-import themes from '../contexts/ThemeContext';
-import constants from './Constants';
+import UseInput from '../UseInput';
+import themes from '../../contexts/ThemeContext';
+import constants from '../Constants';
 
 const AuthInput = (props) => {
   return (
