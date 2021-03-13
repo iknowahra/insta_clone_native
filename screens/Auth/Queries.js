@@ -8,6 +8,7 @@ export const LOG_IN = gql`
       error
       user {
         id
+        userName
         confirmSecret
       }
     }

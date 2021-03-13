@@ -1,38 +1,9 @@
 import React, { useState, useCallback } from 'react';
-import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native';
+import { StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import Loader from '../../components/Loader';
-import { useQuery, gql } from '@apollo/client';
-import Feed from '../../components/Feed';
-
-const FEED_QUERY = gql`
-  {
-    seeFeed {
-      id
-      location
-      caption
-      likeCount
-      amILiking
-      createdAt
-      commentCount
-      files {
-        id
-        url
-      }
-      comments {
-        id
-        text
-        userId
-        userName
-        avatar
-      }
-      user {
-        id
-        userName
-        avatar
-      }
-    }
-  }
-`;
+import { useQuery } from '@apollo/client';
+import { FEED_QUERY } from '../../contexts/Queries';
+import FullFeeds from '../../components/Post/FullFeeds';
 
 export default () => {
   const [refreshing, setRefreshing] = useState(false);
@@ -47,6 +18,7 @@ export default () => {
       setRefreshing(false);
     }
   });
+
   return (
     <ScrollView
       contentContainerStyle={styles.container}
@@ -55,28 +27,12 @@ export default () => {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      {loading && <Loader />}
-      {!loading &&
-        data &&
-        data.seeFeed &&
-        data.seeFeed.map((post) => {
-          return (
-            <View style={styles.innerContainer} key={post.id + post.createdAt}>
-              <Feed
-                id={post.id}
-                location={post.location}
-                caption={post.caption}
-                user={post.user}
-                files={post.files}
-                likeCount={post.likeCount}
-                amILiking={post.amILiking}
-                comments={post.comments}
-                createdAt={post.createdAt}
-                commentCount={post.commentCount}
-              />
-            </View>
-          );
-        })}
+      {loading && (
+        <View styles={styles.innerContainer}>
+          <Loader />
+        </View>
+      )}
+      {!loading && data?.seeFeed && <FullFeeds posts={[...data.seeFeed]} />}
     </ScrollView>
   );
 };

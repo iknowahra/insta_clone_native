@@ -9,16 +9,14 @@ import {
 } from 'react-native';
 import * as yup from 'yup';
 import { Formik } from 'formik';
-import { useLazyQuery } from '@apollo/client';
-
-import { CHECK_USER } from './Queries';
 import themes from '../../contexts/ThemeContext';
-import AuthButton from '../../components/AuthButton';
-import AuthInput from '../../components/AuthInput';
+import AuthButton from '../../components/Auth/AuthButton';
+import AuthInput from '../../components/Auth/AuthInput';
 
 export default ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
-  const { email, username } = route.params;
+  const { email, username } = (route.params = {});
+
   const onhandleSubmit = async (values) => {
     try {
       setLoading(true);

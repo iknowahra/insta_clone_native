@@ -13,11 +13,11 @@ import { useMutation } from '@apollo/client';
 
 import { SIGN_UP } from './Queries';
 import themes from '../../contexts/ThemeContext';
-import AuthButton from '../../components/AuthButton';
-import AuthInput from '../../components/AuthInput';
+import AuthButton from '../../components/Auth/AuthButton';
+import AuthInput from '../../components/Auth/AuthInput';
 
 export default ({ navigation, route }) => {
-  const { email, username, firstName, lastName } = route.params;
+  const { email, username, firstName, lastName } = (route.params = {});
   const [loading, setLoading] = useState(false);
   const [createAccountMutation, { data }] = useMutation(SIGN_UP);
 

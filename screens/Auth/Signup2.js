@@ -13,8 +13,8 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 
 import { CHECK_USER, SIGN_UP } from './Queries';
 import themes from '../../contexts/ThemeContext';
-import AuthButton from '../../components/AuthButton';
-import AuthInput from '../../components/AuthInput';
+import AuthButton from '../../components/Auth/AuthButton';
+import AuthInput from '../../components/Auth/AuthInput';
 
 export default ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
@@ -95,11 +95,11 @@ export default ({ navigation, route }) => {
           }
         } else {
           setError(false);
-          if (route.params.facebookId) {
+          if (route.params?.facebookId) {
             onFbSignup({ ...route.params, username: values.username });
           }
           navigation.navigate('SignupFin', {
-            email: route.params.email,
+            email: route.params?.email,
             username: values.username,
           });
         }
@@ -116,7 +116,7 @@ export default ({ navigation, route }) => {
     <View style={styles.container}>
       <Formik
         validationSchema={SignupSchema}
-        initialValues={{ email: route.params.email || '' }}
+        initialValues={{ email: route.params?.email }}
         onSubmit={(values) => onhandleSubmit(values)}
         onChangeText={(values) => {}}
       >

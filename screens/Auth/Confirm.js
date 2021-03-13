@@ -17,14 +17,14 @@ import {
 } from 'react-native';
 
 import themes from '../../contexts/ThemeContext';
-import AuthButton from '../../components/AuthButton';
-import AuthInput from '../../components/AuthInput';
+import AuthButton from '../../components/Auth/AuthButton';
+import AuthInput from '../../components/Auth/AuthInput';
 import logo from '../../assets/logoLetter.png';
 import { isLogginVar } from '../../contexts/AuthContext';
 import { REQUEST_SECRET, CONFIRM_SECRET } from './Queries';
 
 export default ({ route }) => {
-  const { email } = route.params;
+  const email = route.params?.email;
   const [loading, setLoading] = useState(false);
   const [isLogin, setLogin] = useState(false);
   const [initSend, setSent] = useState(false);

@@ -8,8 +8,8 @@ import {
   Image,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import constants from './Constants';
-import themes from '../contexts/ThemeContext';
+import constants from '../Constants';
+import themes from '../../contexts/ThemeContext';
 
 const AuthButton = ({ text, onPress, disabled, loading = false, image }) => (
   <Pressable onPress={onPress} disabled={disabled && loading}>

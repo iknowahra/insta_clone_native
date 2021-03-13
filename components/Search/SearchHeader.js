@@ -1,9 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, Image, Text, Pressable } from 'react-native';
-import Username from './Username';
-import AuthButton from './AuthButton';
-import themes from '../contexts/ThemeContext';
-import Constants from './Constants';
+import Username from '../Username';
+import themes from '../../contexts/ThemeContext';
+import Constants from '../Constants';
 
 export default ({ uri, postCount }) => {
   return (
@@ -17,7 +16,7 @@ export default ({ uri, postCount }) => {
       )}
       <View style={styles.infoContainer}>
         <View style={styles.postInfo}>
-          <Username username={postCount} />
+          <Text style={styles.postCountText}>{postCount}</Text>
           <Text style={styles.greySmallText}>posts</Text>
         </View>
         <Pressable style={styles.buttonWrapper} onPress={() => null}>
@@ -76,5 +75,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 40,
     fontWeight: 'bold',
+  },
+  postCountText: {
+    fontWeight: 'bold',
+    fontSize: 18,
   },
 });
