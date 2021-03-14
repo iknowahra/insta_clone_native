@@ -5,10 +5,9 @@ import themes from '../../contexts/ThemeContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { isLogginVar } from '../../contexts/AuthContext';
 
-export default ({ onNavigate }) => {
+export default ({}) => {
   const onLogout = async () => {
     await AsyncStorage.removeItem('token');
-    await AsyncStorage.removeItem('FBtoken');
     await AsyncStorage.setItem('isLoggedIn', 'false');
     isLogginVar(false);
     console.log('See you soon!');

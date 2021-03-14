@@ -11,11 +11,7 @@ import backgroundImage from '../../assets/backgroundGradient.png';
 import AuthButton from '../../components/Auth/AuthButton';
 import Constants from '../../components/Constants';
 import { LOG_IN_FB, CHECK_USER } from './Queries';
-import {
-  isLogginVar,
-  getUserId,
-  getUserName,
-} from '../../contexts/AuthContext';
+import { isLogginVar } from '../../contexts/AuthContext';
 
 export default ({ navigation, route }) => {
   const [fbUser, setFbUser] = useState('');
@@ -100,8 +96,7 @@ export default ({ navigation, route }) => {
           } else {
             await AsyncStorage.setItem('token', loginFb.token);
             await AsyncStorage.setItem('isLoggedIn', 'true');
-            getUserId(loginFb.user.id);
-            getUserName(loginFb.user.userNames);
+            await AsyncStorage.setItem('user', JSON.stringify(loginFb.user));
             setFbLogin(true);
           }
         }

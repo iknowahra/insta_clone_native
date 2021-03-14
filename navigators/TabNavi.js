@@ -1,21 +1,18 @@
 import * as React from 'react';
 import { Image, Platform, Pressable, View, Text } from 'react-native';
-import { Ionicons, AntDesign, Feather } from '@expo/vector-icons';
+import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screens/Main/Home';
 import Notification from '../screens/Main/Notification';
 import Profile from '../screens/Main/Profile/Profile';
-import YourProfile from '../screens/Main/Profile/YourProfile';
-import Search from '../screens/Main/Search/Search';
 import Comments from '../screens/Main/Comments';
-import Result from '../screens/Main/Search/SearchResult';
-import SearchBar from '../components/Search/SearchBar';
 import PhotoNavigation from './PhotoNavi';
 import UserPosts from '../components/Post/UserPosts';
 import LogoutButton from '../components/Auth/LogoutButton';
 import Logo from '../assets/logoLetter.png';
 import themes from '../contexts/ThemeContext';
+import SearchNavigation from './SearchNavi';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -44,7 +41,7 @@ export default function TabNavigation({ navigation }) {
   return (
     <Tab.Navigator
       mode="modal"
-      initialRouteName="Home"
+      initialRouteName="Search"
       tabBarOptions={{
         showLabel: false,
         tabStyle: {
@@ -151,47 +148,7 @@ export default function TabNavigation({ navigation }) {
           ),
         }}
       >
-        {() =>
-          stackFactory(
-            Search,
-            'Search',
-            {
-              headerTitle: () => <SearchBar />,
-              headerTitleAlign: 'center',
-            },
-            <Stack.Screen
-              name="Result"
-              component={Result}
-              options={({ route }) => ({
-                headerTitle: () => (
-                  <View>
-                    <Text
-                      style={{
-                        marginLeft: 10,
-                        fontSize: 20,
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      {route.params.term}
-                    </Text>
-                  </View>
-                ),
-                headerTitleAlign: 'center',
-                headerRight: () => (
-                  <Pressable style={{ marginRight: 25 }} onPress={() => null}>
-                    <Feather name="more-horizontal" size={24} />
-                  </Pressable>
-                ),
-              })}
-            />,
-            <Stack.Screen
-              name="UserPosts"
-              component={UserPosts}
-              options={{ headerTitle: 'Explore', headerTitleAlign: 'center' }}
-            />,
-            <Stack.Screen name={'YourProfile'} component={YourProfile} />,
-          )
-        }
+        {() => <SearchNavigation />}
       </Tab.Screen>
       <Tab.Screen
         name="Add"

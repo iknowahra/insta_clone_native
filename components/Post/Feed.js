@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { Image, View, StyleSheet, Text, Pressable } from 'react-native';
 import Swiper from 'react-native-swiper';
-
+import NoAvatar from '../../contexts/NoAvatar';
 import constants from '../Constants';
 import UserBold from '../Username';
 import themes from '../../contexts/ThemeContext';
@@ -31,6 +31,7 @@ const Feed = ({
   commentCount,
 }) => {
   const navigation = useNavigation();
+  const [isShort, setShort] = useState(true);
   const [numLines, setNumLines] = useState(0);
   const [comments, setComments] = useState(commentsProp);
   const [amILiking, setLike] = useState(amILikingProp);
@@ -64,22 +65,30 @@ const Feed = ({
   }, []);
 
   useEffect(() => Preload(), []);
-
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <Image source={{ uri: user.avatar }} style={styles.avatar} />
+        <Image
+          source={{ uri: user.avatar || NoAvatar }}
+          style={styles.avatar}
+        />
         <View style={styles.headerCaption}>
           <UserBold username={user.userName} />
-          <Pressable style={styles.locationPressable} onPress={() => null}>
-            <Text style={styles.location}>{location}</Text>
-          </Pressable>
+          {location && (
+            <Pressable style={styles.locationPressable} onPress={() => null}>
+              <Text style={styles.location}>{location}</Text>
+            </Pressable>
+          )}
         </View>
         <Pressable style={styles.moreIcon} onPress={() => null}>
           <Feather name="more-horizontal" size={24} />
         </Pressable>
       </View>
-      <View style={styles.swiperContainer}>
+      <View
+        style={
+          isShort ? styles.swiperContainerShort : styles.swiperContainerLong
+        }
+      >
         <Swiper
           style={styles.swiperWrapper}
           buttonWrapperStyle={{ alignItems: 'flex-start' }}
@@ -88,13 +97,27 @@ const Feed = ({
             bottom: -30,
           }}
         >
-          {files.map((files) => (
-            <Image
-              style={styles.photo}
-              key={files.id}
-              source={{ uri: files.url }}
-            />
-          ))}
+          {files.map((file, index) => {
+            let width, height;
+            Image.getSize(file.url, (width, height) => {
+              if (index === 0) {
+                width = width;
+                height = height;
+                width >= height ? setShort(true) : setShort(false);
+              }
+            });
+            return (
+              <Image
+                style={
+                  width >= height
+                    ? { ...styles.photo, height: constants.height / 2.5 }
+                    : { ...styles.photo, height: constants.height / 1.8 }
+                }
+                key={file.id}
+                source={{ uri: file.url }}
+              />
+            );
+          })}
         </Swiper>
       </View>
       <View style={styles.userReaction}>
@@ -106,7 +129,12 @@ const Feed = ({
               <Ionicons name="heart-outline" size={28} color="black" />
             )}
           </Pressable>
-          <Pressable style={styles.reactionChat} onPress={() => null}>
+          <Pressable
+            style={styles.reactionChat}
+            onPress={() =>
+              navigation.navigate('Comments', { postId: id, autoFocus: true })
+            }
+          >
             <Ionicons name="chatbubble-outline" size={24} color="black" />
           </Pressable>
           <Pressable style={styles.reactionPlane} onPress={() => null}>
@@ -169,12 +197,16 @@ const styles = StyleSheet.create({
   username: { fontWeight: 'bold', fontSize: 18 },
   location: { fontSize: 13, marginTop: -2 },
   moreIcon: { position: 'absolute', right: 5 },
-  swiperContainer: {
-    maxHeight: constants.height / 1.5,
+  swiperContainerShort: {
+    maxHeight: constants.height / 2.5,
     height: constants.height / 2.5,
   },
-  swiperWrapper: { height: constants.height / 2.5 },
-  photo: { width: constants.width, height: constants.height / 2.5 },
+  swiperContainerLong: {
+    maxHeight: constants.height / 1.8,
+    height: constants.height / 1.8,
+  },
+  swiperWrapper: {},
+  photo: { width: constants.width },
   userReaction: { paddingHorizontal: 15 },
   reaction: {
     flexDirection: 'row',

@@ -12,16 +12,12 @@ import {
 } from 'react-native';
 import * as yup from 'yup';
 import { Formik } from 'formik';
-import { useQuery, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Facebook from 'expo-facebook';
 
 import { LOG_IN, LOG_IN_FB } from './Queries';
-import {
-  getUserId,
-  getUserName,
-  isLogginVar,
-} from '../../contexts/AuthContext';
+import { isLogginVar } from '../../contexts/AuthContext';
 import themes from '../../contexts/ThemeContext';
 import logo from '../../assets/logoLetter.png';
 import fbLogo from '../../assets/facebookBlue.png';
@@ -73,8 +69,7 @@ export default ({ navigation, route }) => {
           }
         } else {
           await AsyncStorage.setItem('token', loginEmail.token);
-          getUserId(loginEmail.user.id);
-          getUserName(loginEmail.user.userName);
+          await AsyncStorage.setItem('user', JSON.stringify(loginEmail.user));
           if (!loginEmail.user.confirmSecret) {
             Alert.alert(
               'Validate Email Addresses',
@@ -145,8 +140,7 @@ export default ({ navigation, route }) => {
           } else {
             await AsyncStorage.setItem('token', loginFb.token);
             await AsyncStorage.setItem('isLoggedIn', 'true');
-            getUserId(loginFb.user.id);
-            getUserName(loginFb.user.userName);
+            await AsyncStorage.setItem('user', JSON.stringify(loginFb.user));
             setFbLogin(true);
           }
         }

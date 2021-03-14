@@ -11,6 +11,7 @@ const SearchBar = () => {
   const navigation = useNavigation();
 
   const onSubmit = async () => {
+    onChangeText('');
     navigation.navigate('Result', { term: value });
   };
 

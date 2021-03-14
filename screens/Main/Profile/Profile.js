@@ -6,7 +6,7 @@ import UserProfile from '../../../components/UserProfile';
 import { GET_MYPROFILE } from '../../../contexts/Queries';
 
 export default () => {
-  const { loading, data, error } = useQuery(GET_MYPROFILE);
+  const { loading, data, error, refetch } = useQuery(GET_MYPROFILE);
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = useCallback(async () => {
     try {
@@ -26,7 +26,7 @@ export default () => {
   }, [error]);
 
   return (
-    <View>
+    <View style={styles.container}>
       {loading && <Loader />}
       <ScrollView
         contentContainerStyle={styles.container}

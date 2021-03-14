@@ -9,20 +9,26 @@ import {
   StyleSheet,
 } from 'react-native';
 import { GET_ALLCOMMENTS } from '../../contexts/Queries';
+import * as timeago from 'timeago.js';
 import themes from '../../contexts/ThemeContext';
 import Username from '../../components/Username';
 import Loader from '../../components/Loader';
-import * as timeago from 'timeago.js';
+import CommentInput from '../../components/CommentInput';
+import Constants from '../../components/Constants';
 
 export default ({ route }) => {
   const {
     data: { seeFullPost },
     loading,
     error,
+    refetch,
   } = useQuery(GET_ALLCOMMENTS, {
     variables: { id: route.params?.postId },
-    nextFetchPolicy: 'network-only',
+    nextFetchPolicy: 'no-cache',
+    pollInterval: 5000,
   });
+
+  const [comments, setComments] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = useCallback(async () => {
     try {
@@ -34,13 +40,17 @@ export default ({ route }) => {
       setRefreshing(false);
     }
   });
-  console.log(seeFullPost?.comments);
+
+  const onAddComment = (newComment) => {
+    setComments((i) => setComments([newComment, ...i]));
+  };
 
   useEffect(() => {
+    setComments(seeFullPost?.comments);
     if (error) {
       console.log('profile e', error);
     }
-  }, [error]);
+  }, [seeFullPost]);
 
   return (
     <View style={styles.container}>
@@ -78,7 +88,7 @@ export default ({ route }) => {
               </View>
             </View>
             <View style={styles.restCommentContainer}>
-              {seeFullPost?.comments?.map((comment, index) => (
+              {comments?.map((comment, index) => (
                 <View style={styles.wrapper} key={index}>
                   <Image
                     source={{ uri: comment.avatar }}
@@ -101,6 +111,13 @@ export default ({ route }) => {
           </View>
         )}
       </ScrollView>
+      <View style={styles.commentInput}>
+        <CommentInput
+          postId={route.params?.postId}
+          setComments={(text) => onAddComment(text)}
+          autoFocus={route.params?.autoFocus}
+        />
+      </View>
     </View>
   );
 };
@@ -111,7 +128,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   scrollWrapper: {
-    flex: 1,
     backgroundColor: 'white',
   },
   mainCommentContainer: {
@@ -128,7 +144,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 50,
-    marginRight: 10,
+    marginRight: 7,
   },
   userCommentContainer: {
     flexGrow: 1,
@@ -141,5 +157,15 @@ const styles = StyleSheet.create({
   date: { color: themes.darkGreyColor },
   restCommentContainer: {
     flex: 1,
+  },
+  commentInput: {
+    paddingLeft: 17,
+    position: 'absolute',
+    paddingVertical: 5,
+    bottom: 0,
+    borderTopColor: themes.lightGreyColor,
+    borderTopWidth: 1,
+    width: Constants.width,
+    backgroundColor: 'white',
   },
 });
