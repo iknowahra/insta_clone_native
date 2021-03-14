@@ -9,6 +9,7 @@ export const LOG_IN = gql`
       user {
         id
         userName
+        avatar
         confirmSecret
       }
     }
@@ -22,6 +23,8 @@ export const LOG_IN_FB = gql`
       error
       user {
         id
+        userName
+        avatar
         confirmSecret
       }
     }

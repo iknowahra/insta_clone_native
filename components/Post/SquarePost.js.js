@@ -6,15 +6,13 @@ import Constants from '../Constants';
 export default ({ files = [], id, index, posts, tabTitle }) => {
   const navigation = useNavigation();
   return (
-    <View style={(index + 1) % 3 === 2 ? styles.container2 : styles.container}>
-      <Pressable
-        onPress={() => {
-          navigation.navigate('UserPosts', { index, posts, tabTitle });
-        }}
-      >
-        <Image source={{ uri: files[0].url }} style={styles.photo} />
-      </Pressable>
-    </View>
+    <Pressable
+      onPress={() => {
+        navigation.navigate('UserPosts', { index, posts, tabTitle });
+      }}
+    >
+      <Image source={{ uri: files[0].url }} style={styles.photo} />
+    </Pressable>
   );
 };
 

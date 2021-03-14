@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { StyleSheet, ScrollView, RefreshControl } from 'react-native';
+import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import Loader from '../../components/Loader';
 import { useQuery } from '@apollo/client';
 import { FEED_QUERY } from '../../contexts/Queries';
@@ -7,7 +7,10 @@ import FullFeeds from '../../components/Post/FullFeeds';
 
 export default () => {
   const [refreshing, setRefreshing] = useState(false);
-  const { loading, data, refetch } = useQuery(FEED_QUERY);
+  const { loading, data, refetch } = useQuery(FEED_QUERY, {
+    nextFetchPolicy: 'no-cache',
+    pollInterval: 50000,
+  });
   const onRefresh = useCallback(async () => {
     try {
       setRefreshing(true);
@@ -39,6 +42,7 @@ export default () => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white',

@@ -1,14 +1,35 @@
 import React, { useLayoutEffect, useState } from 'react';
 import { StyleSheet, View, Text, Image, Pressable } from 'react-native';
+import { useMutation } from '@apollo/client';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
 import themes from '../contexts/ThemeContext';
+import { FOLLOW_USER, UNFOLLOW_USER } from '../contexts/Queries';
 import Constants from './Constants';
 import SquarePost from './Post/SquarePost.js';
 
 export default ({ user, posts }) => {
   const navigation = useNavigation();
   const [grindMode, setGrind] = useState(true);
+  const [follow, setFollow] = useState(user?.amIFollowing);
+  const [followUser] = useMutation(FOLLOW_USER, {
+    variables: { id: user?.id },
+    skip: !user?.id,
+  });
+  const [unfollowUser] = useMutation(UNFOLLOW_USER, {
+    variables: { id: user?.id },
+    skip: !user?.id,
+  });
+
+  const onClick = () => {
+    if (follow) {
+      setFollow(!follow);
+      unfollowUser();
+    } else {
+      setFollow(!follow);
+      followUser();
+    }
+  };
 
   const toggleGrind = (mode) => setGrind(mode === 'grind');
 
@@ -16,6 +37,7 @@ export default ({ user, posts }) => {
     navigation.setOptions({ title: user.userName });
   }, [user]);
 
+  console.log('userpfoil, user.amIFollowing', user?.amIFollowing);
   return (
     <View style={styles.container}>
       <View style={styles.headerWrapper}>
@@ -50,9 +72,26 @@ export default ({ user, posts }) => {
           <Text style={styles.fullName}>{user.fullName}</Text>
           <Text style={styles.bio}>{user.bio}</Text>
           <View style={styles.buttonContainer}>
-            <Pressable style={{ ...styles.lineBotton }} onPress={() => null}>
-              <Text style={styles.bottonText}>
-                {user.itsMe ? 'edit profile' : 'follow'}
+            <Pressable
+              style={
+                !user.itsMe && !follow
+                  ? {
+                      ...styles.lineBotton,
+                      backgroundColor: themes.blueColor,
+                      borderWidth: 0,
+                    }
+                  : { ...styles.lineBotton }
+              }
+              onPress={onClick}
+            >
+              <Text
+                style={
+                  !user.itsMe && !follow
+                    ? { ...styles.bottonText, color: 'white' }
+                    : { ...styles.bottonText, color: 'black' }
+                }
+              >
+                {user.itsMe ? 'edit profile' : follow ? 'Unfollow' : 'follow'}
               </Text>
             </Pressable>
             <Pressable style={{ ...styles.lineBotton }} onPress={() => null}>
@@ -97,13 +136,21 @@ export default ({ user, posts }) => {
       {user.postCount ? (
         <View style={styles.photoContainer}>
           {posts.map((post, index) => (
-            <SquarePost
+            <View
               key={index}
-              posts={posts}
-              {...post}
-              index={index}
-              tabTitle={user.userName}
-            />
+              style={
+                (index + 1) % 3 === 2
+                  ? { marginHorizontal: 1.5, marginBottom: 1.5 }
+                  : { marginBottom: 1.5 }
+              }
+            >
+              <SquarePost
+                posts={posts}
+                {...post}
+                index={index}
+                tabTitle={user.userName}
+              />
+            </View>
           ))}
         </View>
       ) : (
@@ -157,6 +204,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   bottonText: {
+    color: 'black',
     textAlign: 'center',
   },
   photoContainer: {

@@ -16,6 +16,7 @@ import themes from '../../../contexts/ThemeContext';
 import Constants from '../../../components/Constants';
 import SquarePost from '../../../components/Post/SquarePost.js.js';
 import SearchHeader from '../../../components/Search/SearchHeader';
+import NoAvatar from '../../../contexts/NoAvatar';
 import { SEARCH_USER, SEARCH_POST } from '../../../contexts/Queries';
 
 export default ({ route, navigation }) => {
@@ -86,13 +87,7 @@ export default ({ route, navigation }) => {
                 {user.avatar ? (
                   <Image source={{ uri: user.avatar }} style={styles.avatar} />
                 ) : (
-                  <Image
-                    source={{
-                      uri:
-                        'https://3znvnpy5ek52a26m01me9p1t-wpengine.netdna-ssl.com/wp-content/uploads/2017/07/noimage_person.png',
-                    }}
-                    style={styles.avatar}
-                  />
+                  <Image source={{ uri: NoAvatar }} style={styles.avatar} />
                 )}
                 <View style={styles.userInfoContainer}>
                   <Username username={user.userName} />

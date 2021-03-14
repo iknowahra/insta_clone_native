@@ -3,7 +3,6 @@ import { View, StyleSheet } from 'react-native';
 import FullFeeds from './FullFeeds';
 
 export default ({ route }) => {
-  console.log('userpost', route?.params);
   return (
     <View style={styles.container}>
       <FullFeeds {...route?.params} />
