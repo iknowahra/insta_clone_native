@@ -13,6 +13,9 @@ import LogoutButton from '../components/Auth/LogoutButton';
 import Logo from '../assets/logoLetter.png';
 import themes from '../contexts/ThemeContext';
 import SearchNavigation from './SearchNavi';
+import Select from '../screens/Photo/Select';
+import Take from '../screens/Photo/Take';
+import Upload from '../screens/Photo/Upload';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -41,7 +44,7 @@ export default function TabNavigation({ navigation }) {
   return (
     <Tab.Navigator
       mode="modal"
-      initialRouteName="Search"
+      initialRouteName="Add"
       tabBarOptions={{
         showLabel: false,
         tabStyle: {
@@ -87,6 +90,10 @@ export default function TabNavigation({ navigation }) {
                 </Pressable>
               ),
               headerTitleAlign: 'center',
+              headerStyle:
+                Platform.OS === 'ios'
+                  ? { shadowColor: 'transparent' }
+                  : { backgroundColor: '#fff', elevation: 0 },
               headerRight: () => (
                 <Pressable
                   onPress={() => navigation.navigate('MessageNavigation')}
@@ -108,6 +115,10 @@ export default function TabNavigation({ navigation }) {
               component={Comments}
               options={{
                 headerTitleAlign: 'center',
+                headerStyle:
+                  Platform.OS === 'ios'
+                    ? { shadowColor: 'transparent' }
+                    : { backgroundColor: '#fff', elevation: 0 },
                 headerRight: () => (
                   <Pressable
                     onPress={() => navigation.navigate('MessageNavigation')}
@@ -163,9 +174,51 @@ export default function TabNavigation({ navigation }) {
         }}
       >
         {() =>
-          stackFactory(PhotoNavigation, 'Add', {
-            title: 'Add',
-          })
+          stackFactory(
+            Select,
+            'Add',
+            {
+              headerTitle: () => (
+                <Text style={{ fontWeight: 'bold', fontSize: 20 }}>
+                  New Post
+                </Text>
+              ),
+              headerStyle:
+                Platform.OS === 'ios'
+                  ? { shadowColor: 'transparent', height: 70 }
+                  : { backgroundColor: '#fff', elevation: 0, height: 70 },
+              headerLeft: () => (
+                <Pressable
+                  style={{ paddingLeft: 10 }}
+                  onPress={() => navigation.navigate('Home')}
+                >
+                  <AntDesign name="close" size={30} color="black" />
+                </Pressable>
+              ),
+              headerRight: () => (
+                <Pressable style={{ paddingRight: 10 }}>
+                  <Text
+                    style={{
+                      color: themes.blueColor,
+                      fontSize: 17,
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    Next
+                  </Text>
+                </Pressable>
+              ),
+              headerTitleAlign: 'center',
+            },
+            <Stack.Screen
+              name="Take"
+              component={Take}
+              options={{
+                headerShown: false,
+              }}
+            />,
+            <Stack.Screen name="Upload" component={Upload} />,
+          )
         }
       </Tab.Screen>
       <Tab.Screen
@@ -191,6 +244,10 @@ export default function TabNavigation({ navigation }) {
         {() =>
           stackFactory(Notification, 'Notification', {
             title: 'Notification',
+            headerStyle:
+              Platform.OS === 'ios'
+                ? { shadowColor: 'transparent' }
+                : { backgroundColor: '#fff', elevation: 0 },
           })
         }
       </Tab.Screen>
@@ -221,8 +278,21 @@ export default function TabNavigation({ navigation }) {
             {
               headerRight: () => <LogoutButton />,
               headerTitleAlign: 'center',
+              headerStyle:
+                Platform.OS === 'ios'
+                  ? { shadowColor: 'transparent' }
+                  : { backgroundColor: '#fff', elevation: 0 },
             },
-            <Stack.Screen name="Comments" component={Comments} />,
+            <Stack.Screen
+              name="Comments"
+              component={Comments}
+              options={{
+                headerStyle:
+                  Platform.OS === 'ios'
+                    ? { shadowColor: 'transparent' }
+                    : { backgroundColor: '#fff', elevation: 0 },
+              }}
+            />,
             <Stack.Screen
               name="UserPosts"
               component={UserPosts}
@@ -250,6 +320,10 @@ export default function TabNavigation({ navigation }) {
                     </Text>
                   </View>
                 ),
+                headerStyle:
+                  Platform.OS === 'ios'
+                    ? { shadowColor: 'transparent' }
+                    : { backgroundColor: '#fff', elevation: 0 },
                 headerTitleAlign: 'center',
               })}
             />,

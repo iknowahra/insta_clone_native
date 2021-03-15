@@ -8,7 +8,7 @@ import UploadPhoto from '../screens/Photo/Upload';
 const Tab = createMaterialTopTabNavigator();
 function PhotoTabNavigation() {
   return (
-    <Tab.Navigator tabBarPosition="bottom">
+    <Tab.Navigator tabBarPosition="bottom" initialRouteName="SelectPhoto">
       <Tab.Screen name="SelectPhoto" component={SelectPhoto} />
       <Tab.Screen name="TakePhoto" component={TakePhoto} />
     </Tab.Navigator>
