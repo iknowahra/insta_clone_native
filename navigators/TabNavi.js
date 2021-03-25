@@ -13,9 +13,6 @@ import LogoutButton from '../components/Auth/LogoutButton';
 import Logo from '../assets/logoLetter.png';
 import themes from '../contexts/ThemeContext';
 import SearchNavigation from './SearchNavi';
-import Select from '../screens/Photo/Select';
-import Take from '../screens/Photo/Take';
-import Upload from '../screens/Photo/Upload';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -44,7 +41,7 @@ export default function TabNavigation({ navigation }) {
   return (
     <Tab.Navigator
       mode="modal"
-      initialRouteName="Add"
+      initialRouteName="Search"
       tabBarOptions={{
         showLabel: false,
         tabStyle: {
@@ -173,53 +170,7 @@ export default function TabNavigation({ navigation }) {
           ),
         }}
       >
-        {() =>
-          stackFactory(
-            Select,
-            'Add',
-            {
-              headerTitle: () => (
-                <Text style={{ fontWeight: 'bold', fontSize: 20 }}>
-                  New Post
-                </Text>
-              ),
-              headerStyle:
-                Platform.OS === 'ios'
-                  ? { shadowColor: 'transparent', height: 70 }
-                  : { backgroundColor: '#fff', elevation: 0, height: 70 },
-              headerLeft: () => (
-                <Pressable
-                  style={{ paddingLeft: 10 }}
-                  onPress={() => navigation.navigate('Home')}
-                >
-                  <AntDesign name="close" size={30} color="black" />
-                </Pressable>
-              ),
-              headerRight: () => (
-                <Pressable style={{ paddingRight: 10 }}>
-                  <Text
-                    style={{
-                      color: themes.blueColor,
-                      fontSize: 17,
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    Next
-                  </Text>
-                </Pressable>
-              ),
-              headerTitleAlign: 'center',
-            },
-            <Stack.Screen
-              name="Take"
-              component={Take}
-              options={{
-                headerShown: false,
-              }}
-            />,
-            <Stack.Screen name="Upload" component={Upload} />,
-          )
-        }
+        {() => <PhotoNavigation />}
       </Tab.Screen>
       <Tab.Screen
         name="Notification"

@@ -142,3 +142,12 @@ export const UNFOLLOW_USER = gql`
     unfollowUser(id: $id)
   }
 `;
+
+export const UPLOAD_PHOTO = gql`
+  mutation uploadPost($caption: String, $location: String, $files: String!) {
+    uploadPost(caption: $caption, location: $location, files: $files) {
+      ok
+      error
+    }
+  }
+`;
