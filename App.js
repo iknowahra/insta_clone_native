@@ -6,7 +6,7 @@ import logo from './assets/logoLetter.png';
 import { options, cache } from './Apollo';
 import { ApolloClient, ApolloProvider } from '@apollo/client';
 import { CachePersistor, AsyncStorageWrapper } from 'apollo3-cache-persist';
-import NavController from './components/NavControllers';
+import NavController from './navigators/NavControllers';
 const SCHEMA_VERSION = '3';
 const SCHEMA_VERSION_KEY = 'apollo';
 
