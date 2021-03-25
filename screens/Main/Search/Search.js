@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import { useQuery } from '@apollo/client';
 import Loader from '../../../components/Loader';
@@ -25,6 +25,10 @@ export default () => {
       setRefreshing(false);
     }
   });
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   return (
     <View style={styles.container}>

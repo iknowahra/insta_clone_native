@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useLazyQuery } from '@apollo/client';
+import { useFocusEffect } from '@react-navigation/native';
 import {
   Text,
   StyleSheet,
@@ -68,6 +69,15 @@ export default ({ route, navigation }) => {
   useEffect(() => {
     onfetch(route.params?.term);
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      null;
+      return () => {
+        navigation.navigate('Search');
+      };
+    }, []),
+  );
 
   console.log(postData);
   return (
