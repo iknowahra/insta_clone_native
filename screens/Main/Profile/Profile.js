@@ -20,10 +20,11 @@ export default () => {
   });
 
   useEffect(() => {
+    refetch();
     if (error) {
       console.log('profile e', error);
     }
-  }, [error]);
+  }, []);
 
   return (
     <View style={styles.container}>

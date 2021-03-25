@@ -3,7 +3,7 @@ import { Text, Pressable, StyleSheet } from 'react-native';
 import constants from '../Constants';
 import themes from '../../contexts/ThemeContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { isLogginVar } from '../../contexts/AuthContext';
+import { isLogginVar } from '../../contexts/LocalContext';
 
 export default ({}) => {
   const onLogout = async () => {
