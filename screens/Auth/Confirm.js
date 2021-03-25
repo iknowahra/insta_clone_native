@@ -20,7 +20,7 @@ import themes from '../../contexts/ThemeContext';
 import AuthButton from '../../components/Auth/AuthButton';
 import AuthInput from '../../components/Auth/AuthInput';
 import logo from '../../assets/logoLetter.png';
-import { isLogginVar } from '../../contexts/AuthContext';
+import { isLogginVar } from '../../contexts/LocalContext';
 import { REQUEST_SECRET, CONFIRM_SECRET } from './Queries';
 
 export default ({ route }) => {

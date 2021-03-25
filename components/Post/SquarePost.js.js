@@ -2,13 +2,15 @@ import React from 'react';
 import { StyleSheet, View, Image, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Constants from '../Constants';
+import { getPostsVar } from '../../contexts/LocalContext';
 
 export default ({ files = [], id, index, posts, tabTitle }) => {
   const navigation = useNavigation();
   return (
     <Pressable
       onPress={() => {
-        navigation.navigate('UserPosts', { index, posts, tabTitle });
+        getPostsVar(posts);
+        navigation.navigate('UserPosts', { index, tabTitle });
       }}
     >
       <Image source={{ uri: files[0].url }} style={styles.photo} />

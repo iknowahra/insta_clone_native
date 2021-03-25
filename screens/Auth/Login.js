@@ -17,7 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Facebook from 'expo-facebook';
 
 import { LOG_IN, LOG_IN_FB } from './Queries';
-import { isLogginVar } from '../../contexts/AuthContext';
+import { isLogginVar } from '../../contexts/LocalContext';
 import themes from '../../contexts/ThemeContext';
 import logo from '../../assets/logoLetter.png';
 import fbLogo from '../../assets/facebookBlue.png';

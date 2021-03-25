@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useReactiveVar } from '@apollo/client';
-import { isLogginVar } from '../contexts/AuthContext';
+import { isLogginVar } from '../contexts/LocalContext';
 import { NavigationContainer } from '@react-navigation/native';
-import AuthNavigation from '../navigators/AuthNavi';
-import MainNavigation from '../navigators/MainNavi';
+import AuthNavigation from './AuthNavi';
+import MainNavigation from './MainNavi';
 
 export default ({ isLoggedIn }) => {
   const checkUserLogin = useReactiveVar(isLogginVar);

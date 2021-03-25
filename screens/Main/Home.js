@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import Loader from '../../components/Loader';
 import { useQuery } from '@apollo/client';
@@ -21,7 +21,6 @@ export default () => {
       setRefreshing(false);
     }
   });
-
   return (
     <ScrollView
       contentContainerStyle={styles.container}

@@ -1,25 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as Permissions from 'expo-permissions';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Alert,
-  Pressable,
-  Platform,
-} from 'react-native';
+import { View, StyleSheet, Alert, Pressable, Platform } from 'react-native';
 import * as MediaLibrary from 'expo-media-library';
 import { Camera } from 'expo-camera';
 import Constants from '../../components/Constants';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import themes from '../../contexts/ThemeContext';
+import { getSelectedPhotosVar } from '../../contexts/LocalContext';
 
 export default ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
-  const [selected, setSelcted] = useState([]);
-  const [album, setAlbum] = useState();
   const cameraRef = useRef();
   const [permission, askForPermission] = Permissions.usePermissions(
     Permissions.CAMERA,
@@ -30,13 +21,24 @@ export default ({ navigation }) => {
 
   const takePhoto = async () => {
     try {
-      console.log('takePhoto clicked');
       const { uri } = await cameraRef.current.takePictureAsync({
         quality: 1,
       });
-      console.log('takephoto uri', uri);
       const asset = await MediaLibrary.createAssetAsync(uri);
-      console.log('takephoto asset', asset);
+      /*  const asset = {
+        albumId: '-1739773001',
+        creationTime: 1615822114282,
+        duration: 0,
+        filename: 'IMG_20210315_222834.jpg',
+        height: 1280,
+        id: '94',
+        mediaType: 'photo',
+        modificationTime: 1615822126000,
+        uri: 'file:///storage/emulated/0/DCIM/Camera/IMG_20210315_222834.jpg',
+        width: 960,
+      }; */
+      getSelectedPhotosVar([asset]);
+      navigation.navigate('Took');
     } catch (e) {
       console.log('take photo error :', e);
     } finally {
@@ -51,7 +53,7 @@ export default ({ navigation }) => {
       },
       {
         text: 'Back Home',
-        onPress: () => navigation.navigation('Home'),
+        onPress: () => navigation.navigate('Home'),
       },
     ]);
   }
@@ -68,9 +70,6 @@ export default ({ navigation }) => {
     })();
   }, []);
 
-  console.log('type', type);
-  console.log('hasPermission', hasPermission);
-
   return (
     <View style={styles.container}>
       <View style={styles.settingContainer}>
@@ -78,17 +77,22 @@ export default ({ navigation }) => {
           style={styles.buttonClose}
           onPress={() => navigation.navigate('Home')}
         >
-          <AntDesign name="close" size={34} color="black" />
+          <AntDesign
+            name="close"
+            size={25}
+            color="black"
+            style={{ marginTop: 2 }}
+          />
         </Pressable>
         <Pressable
           style={styles.buttonClose}
-          onPress={() => navigation.navigate('Add')}
+          onPress={() => navigation.navigate('Select')}
         >
           <Ionicons
             name={
               Platform.OS === 'ios' ? 'ios-albums-outline' : 'md-albums-outline'
             }
-            size={36}
+            size={28}
             color="black"
           />
         </Pressable>
@@ -109,7 +113,7 @@ export default ({ navigation }) => {
                 ? 'ios-camera-reverse-outline'
                 : 'md-camera-reverse-outline'
             }
-            size={38}
+            size={30}
             color="black"
           />
         </Pressable>
