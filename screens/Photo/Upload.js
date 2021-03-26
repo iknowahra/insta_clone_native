@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Alert, View, Text, StyleSheet, Image } from 'react-native';
 import { useReactiveVar } from '@apollo/client';
-import { useFocusEffect } from '@react-navigation/native';
 import UseInput from '../../components/UseInput';
 import themes from '../../contexts/ThemeContext';
 import Constants from '../../components/Constants';
@@ -15,7 +14,8 @@ export default ({ navigation }) => {
   const selectedPhoto = useReactiveVar(getSelectedPhotosVar);
   const [caption, onChangeCaption] = useState('');
   const [location, onChangeLocation] = useState('');
-  const [files, setFiles] = useState('');
+  const [files, setFiles] = useState(selectedPhoto);
+  const hasUnsavedChanges = Boolean(caption || location || selectedPhoto);
 
   const onUpdateCaption = (caption) => {
     onChangeCaption(caption);
@@ -28,23 +28,36 @@ export default ({ navigation }) => {
   };
 
   useEffect(() => {
-    const photos = [];
-    selectedPhoto?.forEach((photo) => photos.push({ url: photo.uri }));
-    setFiles(JSON.stringify(photos));
+    setFiles(selectedPhoto);
   }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      null;
-      return () => {
-        getSelectedPhotosVar([]);
-        sendPhotosVar({});
-        onChangeCaption('');
-        onChangeLocation('');
-        navigation.navigate('Select');
-        navigation.navigate('Profile');
-      };
-    }, []),
+  useEffect(
+    () =>
+      navigation.addListener('beforeRemove', (e) => {
+        if (!hasUnsavedChanges) {
+          return;
+        }
+        e.preventDefault();
+        Alert.alert(
+          'Discard changes?',
+          'You have unsaved changes. Are you sure to discard them and leave the screen?',
+          [
+            { text: "Don't leave", style: 'cancel', onPress: () => {} },
+            {
+              text: 'Discard',
+              style: 'destructive',
+              onPress: () => {
+                getSelectedPhotosVar([]);
+                sendPhotosVar({});
+                onChangeCaption('');
+                onChangeLocation('');
+                navigation.dispatch(e.data.action);
+              },
+            },
+          ],
+        );
+      }),
+    [navigation, hasUnsavedChanges],
   );
 
   return (

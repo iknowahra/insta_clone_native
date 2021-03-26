@@ -161,6 +161,7 @@ export default function TabNavigation({ navigation }) {
       <Tab.Screen
         name="Add"
         options={{
+          tabBarVisible: false,
           tabBarIcon: ({ focused }) => (
             <AntDesign
               name={'plussquareo'}

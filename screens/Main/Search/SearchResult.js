@@ -90,7 +90,7 @@ export default ({ route, navigation }) => {
         }
       >
         {loading && <Loader />}
-        {searchUser ? (
+        {!loading && searchUser ? (
           userData?.searchUser[0] ? (
             userData?.searchUser?.map((user, index) => (
               <Pressable style={styles.userContainer} key={index}>
@@ -127,7 +127,7 @@ export default ({ route, navigation }) => {
               postCount={postData.searchPost.length}
             />
             <View style={styles.photoContainer}>
-              {postData.searchPost.map((post, index) => (
+              {postData?.searchPost?.map((post, index) => (
                 <SquarePost
                   {...post}
                   key={index}

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { useReactiveVar, useMutation } from '@apollo/client';
 import { Alert, Platform, Pressable, Text } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -16,27 +17,53 @@ const Stack = createStackNavigator();
 export default function PhotoNavigation() {
   const navigation = useNavigation();
   const photosData = useReactiveVar(sendPhotosVar);
-  const [uploadPostMutation, { data, loading }] = useMutation(UPLOAD_PHOTO);
+  const [uploadPostMutation, { data: mutationData, loading }] = useMutation(
+    UPLOAD_PHOTO,
+  );
   const onShareData = async () => {
     try {
-      await uploadPostMutation({
-        variables: photosData,
-      });
-      if (data?.uploadPost?.error) {
-        Alert.alert('Error', 'Sorry for the error. Please try agian.');
+      const formData = new FormData();
+      for (let photo of photosData?.files) {
+        formData.append('photos', {
+          name: photo.filename,
+          type: `image/${photo.filename.split('.')[1].toLowerCase()}`,
+          uri: photo.uri,
+        });
       }
+      const {
+        data: { filesArray },
+      } = await axios({
+        method: 'post',
+        url: 'http://10.0.2.2:5000/api/upload',
+        data: formData,
+        headers: {
+          Accept: 'application/json',
+          'content-type': 'multipart/form-data',
+        },
+      });
+
+      const files = [];
+      filesArray.forEach((file) => files.push({ url: file.location }));
+
+      await uploadPostMutation({
+        variables: {
+          caption: photosData.caption,
+          location: photosData.location,
+          files: JSON.stringify(files),
+        },
+      });
     } catch (e) {
       console.log('upload error : ', e);
       Alert.alert('Network Error', 'Sorry for the error. Please try later.');
     } finally {
-      if (data?.uploadPost?.ok) {
+      if (mutationData?.uploadPost?.ok) {
         navigation.navigate('Profile');
       }
     }
   };
 
   return (
-    <Stack.Navigator initialRouteName="Take">
+    <Stack.Navigator initialRouteName="Select">
       <Stack.Screen
         name="Select"
         component={Select}

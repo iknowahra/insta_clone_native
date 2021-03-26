@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, StyleSheet, Image, Alert, Pressable } from 'react-native';
 import * as MediaLibrary from 'expo-media-library';
 import Loader from '../../components/Loader';
@@ -112,6 +113,18 @@ export default ({ navigation }) => {
   useEffect(() => {
     getPermission();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      null;
+      return () => {
+        setSingle(true);
+        setSingleSelected({});
+        setMultiSelected([]);
+        getAlbum();
+      };
+    }, []),
+  );
 
   return (
     <View style={styles.container}>
