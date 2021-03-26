@@ -13,7 +13,7 @@ export default ({ files = [], id, index, posts, tabTitle }) => {
         navigation.navigate('UserPosts', { index, tabTitle });
       }}
     >
-      <Image source={{ uri: files[0].url }} style={styles.photo} />
+      <Image source={{ uri: files[0]?.url }} style={styles.photo} />
     </Pressable>
   );
 };

@@ -161,7 +161,10 @@ const Feed = ({
         </View>
         <View>
           {commentCount && !!(commentCount - comments.length) ? (
-            <Text style={styles.hiddenText}>
+            <Text
+              style={styles.hiddenText}
+              onPress={() => navigation.navigate('Comments', { postId: id })}
+            >
               {`See all ${commentCount - comments.length} comments`}
             </Text>
           ) : null}
@@ -171,7 +174,12 @@ const Feed = ({
           comments.map((comment, index) => (
             <Text key={String(index)} style={styles.comments} numberOfLines={1}>
               <UserBold username={`${comment.userName} `} />
-              <Text style={styles.userCommentContainer}>{comment.text}</Text>
+              <Text
+                style={styles.userCommentContainer}
+                onPress={() => navigation.navigate('Comments', { postId: id })}
+              >
+                {comment.text}
+              </Text>
             </Text>
           ))}
         <View>
