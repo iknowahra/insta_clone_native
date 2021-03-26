@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import * as Permissions from 'expo-permissions';
 import { View, StyleSheet, Alert, Pressable, Platform } from 'react-native';
 import * as MediaLibrary from 'expo-media-library';
@@ -69,6 +70,17 @@ export default ({ navigation }) => {
       setHasPermission(status === 'granted' || permission === 'granted');
     })();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      null;
+      return () => {
+        getSelectedPhotosVar([]);
+        navigation.navigate('Select');
+        navigation.navigate('Home');
+      };
+    }, []),
+  );
 
   return (
     <View style={styles.container}>
@@ -149,7 +161,7 @@ const styles = StyleSheet.create({
   button: {},
   text: {},
   snapButton: {
-    marginTop: 20,
+    marginTop: 50,
     width: 80,
     height: 80,
     borderRadius: 50,

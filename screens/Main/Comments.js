@@ -17,12 +17,7 @@ import CommentInput from '../../components/CommentInput';
 import Constants from '../../components/Constants';
 
 export default ({ route }) => {
-  const {
-    data: { seeFullPost },
-    loading,
-    error,
-    refetch,
-  } = useQuery(GET_ALLCOMMENTS, {
+  const { data, loading, error, refetch } = useQuery(GET_ALLCOMMENTS, {
     variables: { id: route.params?.postId },
     nextFetchPolicy: 'no-cache',
     pollInterval: 5000,
@@ -46,11 +41,11 @@ export default ({ route }) => {
   };
 
   useEffect(() => {
-    setComments(seeFullPost?.comments);
+    setComments(data?.seeFullPost?.comments);
     if (error) {
       console.log('profile e', error);
     }
-  }, [seeFullPost]);
+  }, [data?.seeFullPost]);
 
   return (
     <View style={styles.container}>
@@ -62,7 +57,7 @@ export default ({ route }) => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        {!loading && seeFullPost && (
+        {!loading && data?.seeFullPost && (
           <View style={styles.mainCommentContainer}>
             <View
               style={{
@@ -72,18 +67,18 @@ export default ({ route }) => {
               }}
             >
               <Image
-                source={{ uri: seeFullPost.user.avatar }}
+                source={{ uri: data.seeFullPost.user.avatar }}
                 style={styles.avatar}
               ></Image>
               <View style={styles.commentColumn}>
                 <Text style={styles.comments}>
-                  <Username username={`${seeFullPost.user.userName}  `} />
+                  <Username username={`${data.seeFullPost.user.userName}  `} />
                   <Text style={styles.userCommentContainer}>
-                    {seeFullPost.caption}
+                    {data.seeFullPost.caption}
                   </Text>
                 </Text>
                 <Text style={styles.date}>
-                  {timeago.format(new Date(seeFullPost.createdAt))}
+                  {timeago.format(new Date(data.seeFullPost.createdAt))}
                 </Text>
               </View>
             </View>
