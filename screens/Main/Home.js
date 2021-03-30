@@ -1,11 +1,20 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  RefreshControl,
+  Text,
+} from 'react-native';
 import Loader from '../../components/Loader';
 import { useQuery } from '@apollo/client';
 import { FEED_QUERY } from '../../contexts/Queries';
 import FullFeeds from '../../components/Post/FullFeeds';
+import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
+import themes from '../../contexts/ThemeContext';
+import Constants from '../../components/Constants';
 
-export default () => {
+export default ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const { loading, data, refetch } = useQuery(FEED_QUERY, {
     nextFetchPolicy: 'no-cache',
@@ -29,6 +38,17 @@ export default () => {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
+      {!loading && !data?.seeFeed?.length && (
+        <View style={styles.noPostsContainer}>
+          <Text style={styles.noPostsText}>No post yet</Text>
+          <Pressable
+            style={styles.noPostsButton}
+            onPress={() => navigation.navigate('Search')}
+          >
+            <Text style={styles.noPostsButtonText}>Wanna explore?</Text>
+          </Pressable>
+        </View>
+      )}
       {loading && (
         <View styles={styles.innerContainer}>
           <Loader />
@@ -46,5 +66,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'white',
   },
-  innerContainer: { flex: 1, marginBottom: 20 },
+  innerContainer: { marginBottom: 20 },
+  noPostsContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  noPostsText: { fontSize: 20 },
+  noPostsButton: {
+    backgroundColor: themes.blueColor,
+    borderRadius: 4,
+    width: Constants.width / 2.7,
+    height: 35,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
+  },
+  noPostsButtonText: { fontSize: 18, color: 'white', textAlign: 'center' },
 });
