@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import Constants from '../../components/Constants';
-import { AntDesign } from '@expo/vector-icons';
+import { HeaderBackButton } from '@react-navigation/stack';
 import themes from '../../contexts/ThemeContext';
 import { getSelectedPhotosVar } from '../../contexts/LocalContext';
 import { useReactiveVar } from '@apollo/client';
@@ -12,13 +12,10 @@ export default ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.settingContainer}>
-        <Pressable
+        <HeaderBackButton
           style={styles.buttonClose}
           onPress={() => navigation.goBack()}
-        >
-          <AntDesign name="left" size={24} color="black" />
-        </Pressable>
-
+        />
         <Text
           style={styles.nextButton}
           onPress={() => navigation.navigate('Upload')}

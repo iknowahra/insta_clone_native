@@ -6,13 +6,12 @@ import UseInput from '../UseInput';
 import themes from '../../contexts/ThemeContext';
 import constants from '../Constants';
 
-const SearchBar = () => {
+const SearchBar = ({ onNavigate }) => {
   const [value, onChangeText] = useState('');
-  const navigation = useNavigation();
 
   const onSubmit = async () => {
     onChangeText('');
-    navigation.navigate('Result', { term: value });
+    onNavigate(value);
   };
 
   return (
@@ -47,7 +46,7 @@ const styles = StyleSheet.create({
     width: constants.width / 1.1,
     paddingLeft: 30,
     paddingVertical: 5,
-    backgroundColor: themes.lightGreyColor,
+    backgroundColor: themes.veryLightGreyColor,
     fontSize: 15,
     borderRadius: 4,
   },

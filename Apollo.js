@@ -6,6 +6,7 @@ import {
   typeDefs,
   getSelectedPhotosVar,
   sendPhotosVar,
+  getUserNameVar,
 } from './contexts/LocalContext';
 import { setContext } from '@apollo/client/link/context';
 
@@ -35,6 +36,11 @@ export const cache = new InMemoryCache({
         sendPhotos: {
           read() {
             return sendPhotosVar();
+          },
+        },
+        getUserName: {
+          read() {
+            return getUserNameVar();
           },
         },
       },

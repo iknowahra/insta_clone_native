@@ -18,10 +18,16 @@ export default function SearchNavigation() {
       <Stack.Screen
         name="Search"
         component={Search}
-        options={{
-          headerTitle: () => <SearchBar />,
+        options={({ navigation }) => ({
+          headerTitle: () => (
+            <SearchBar
+              onNavigate={(value) => {
+                navigation.navigate('Result', { term: value });
+              }}
+            />
+          ),
           headerTitleAlign: 'center',
-        }}
+        })}
       />
       <Stack.Screen
         name="Result"

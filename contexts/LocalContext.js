@@ -31,6 +31,12 @@ export const SEND_PHOTOS = gql`
   }
 `;
 
+export const GET_USER_NAME = gql`
+  query getUserName {
+    getUserName @client
+  }
+`;
+
 export const isLogginVar = makeVar(false);
 
 export const getPostsVar = makeVar([]);
@@ -38,3 +44,5 @@ export const getPostsVar = makeVar([]);
 export const getSelectedPhotosVar = makeVar([]);
 
 export const sendPhotosVar = makeVar({});
+
+export const getUserNameVar = makeVar('');
