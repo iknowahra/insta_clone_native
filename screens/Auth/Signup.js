@@ -28,9 +28,6 @@ export default ({ navigation, route }) => {
       const { name } = JSON.parse(fbUserInfo);
       setFbUser(name);
     }
-    if (fbToken) {
-      setFbLogin(true);
-    }
   };
 
   const onCheckNewAccount = async (email) => {

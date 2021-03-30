@@ -40,9 +40,6 @@ export default ({ navigation, route }) => {
       const { name } = JSON.parse(fbUserInfo);
       setFbUser(name);
     }
-    if (fbToken) {
-      setLogin(true);
-    }
   };
 
   const onhandleSubmit = async (values) => {
@@ -141,7 +138,7 @@ export default ({ navigation, route }) => {
             await AsyncStorage.setItem('token', loginFb.token);
             await AsyncStorage.setItem('isLoggedIn', 'true');
             await AsyncStorage.setItem('user', JSON.stringify(loginFb.user));
-            setFbLogin(true);
+            setLogin(true);
           }
         }
       }
