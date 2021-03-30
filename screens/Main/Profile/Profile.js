@@ -4,6 +4,7 @@ import { useQuery } from '@apollo/client';
 import Loader from '../../../components/Loader';
 import UserProfile from '../../../components/UserProfile';
 import { GET_MYPROFILE } from '../../../contexts/Queries';
+import { getUserNameVar } from '../../../contexts/LocalContext';
 
 export default () => {
   const { loading, data, error, refetch } = useQuery(GET_MYPROFILE);
@@ -24,6 +25,7 @@ export default () => {
     if (error) {
       console.log('profile e', error);
     }
+    getUserNameVar(data?.myProfile?.user.userName);
   }, []);
 
   return (

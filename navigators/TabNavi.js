@@ -17,14 +17,7 @@ import SearchNavigation from './SearchNavi';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const stackFactory = (
-  initialRoute,
-  name,
-  customConfig,
-  sibling,
-  sibling2,
-  sibling3,
-) => (
+const stackFactory = (initialRoute, name, customConfig, sibling, sibling2) => (
   <Stack.Navigator>
     <Stack.Screen
       name={name}
@@ -33,7 +26,6 @@ const stackFactory = (
     />
     {sibling}
     {sibling2}
-    {sibling3}
   </Stack.Navigator>
 );
 
@@ -41,7 +33,7 @@ export default function TabNavigation({ navigation }) {
   return (
     <Tab.Navigator
       mode="modal"
-      initialRouteName="Search"
+      initialRouteName="Home"
       tabBarOptions={{
         showLabel: false,
         tabStyle: {

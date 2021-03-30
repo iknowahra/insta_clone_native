@@ -148,6 +148,32 @@ export const UPLOAD_PHOTO = gql`
     uploadPost(caption: $caption, location: $location, files: $files) {
       ok
       error
+      post {
+        ...FullPostFields
+        user {
+          ...CoreUserFields
+        }
+      }
     }
   }
+  ${FULL_POST_FIELDS}
+  ${CORE_USER_FIELDS}
+`;
+
+export const GET_MYROOMS = gql`
+  query seeRooms {
+    seeRooms {
+      id
+      participants {
+        ...CoreUserFields
+      }
+      messages {
+        id
+        text
+        createdAt
+      }
+      createdAt
+    }
+  }
+  ${CORE_USER_FIELDS}
 `;
