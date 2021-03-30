@@ -11,7 +11,7 @@ import Upload from '../screens/Photo/Upload';
 import Took from '../screens/Photo/Took';
 import themes from '../contexts/ThemeContext';
 import { sendPhotosVar } from '../contexts/LocalContext';
-import { UPLOAD_PHOTO } from '../contexts/Queries';
+import { FEED_QUERY, UPLOAD_PHOTO } from '../contexts/Queries';
 
 const Stack = createStackNavigator();
 export default function PhotoNavigation() {
@@ -20,6 +20,7 @@ export default function PhotoNavigation() {
   const [uploadPostMutation, { data: mutationData, loading }] = useMutation(
     UPLOAD_PHOTO,
   );
+
   const onShareData = async () => {
     try {
       const formData = new FormData();
@@ -51,14 +52,27 @@ export default function PhotoNavigation() {
           location: photosData.location,
           files: JSON.stringify(files),
         },
+
+        update(cache, { data }) {
+          const newFeedFromResponse = data?.uploadPost.post;
+          const existingFeeds = cache.readQuery({ query: FEED_QUERY });
+          if (existingFeeds && newFeedFromResponse) {
+            cache.writeQuery({
+              query: FEED_QUERY,
+              data: {
+                seeFeed: [newFeedFromResponse, ...existingFeeds?.seeFeed],
+              },
+            });
+          }
+        },
       });
+
+      if (mutationData?.uploadPost?.ok) {
+        navigation.navigate('Home');
+      }
     } catch (e) {
       console.log('upload error : ', e);
       Alert.alert('Network Error', 'Sorry for the error. Please try later.');
-    } finally {
-      if (mutationData?.uploadPost?.ok) {
-        navigation.navigate('Profile');
-      }
     }
   };
 

@@ -10,7 +10,6 @@ import {
 } from '../../contexts/LocalContext';
 
 export default ({ navigation }) => {
-  const data = useReactiveVar(sendPhotosVar);
   const selectedPhoto = useReactiveVar(getSelectedPhotosVar);
   const [caption, onChangeCaption] = useState('');
   const [location, onChangeLocation] = useState('');
