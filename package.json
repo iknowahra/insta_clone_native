@@ -39,6 +39,7 @@
     "react-native-text-size": "4.0.0-rc.1",
     "react-native-web": "~0.13.12",
     "style-component": "0.0.1",
+    "subscriptions-transport-ws": "0.9.18",
     "timeago.js": "4.0.2",
     "yup": "0.32.8"
   },

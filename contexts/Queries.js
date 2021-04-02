@@ -177,3 +177,67 @@ export const GET_MYROOMS = gql`
   }
   ${CORE_USER_FIELDS}
 `;
+
+export const SUB_MESSAGE = gql`
+  subscription newMessage($roomId: Int!) {
+    newMessage(roomId: $roomId) {
+      id
+      text
+      createdAt
+      user {
+        id
+        userName
+        avatar
+      }
+    }
+  }
+`;
+
+export const GET_MESSAGE = gql`
+  query getMessage($roomId: Int!) {
+    getMessage(roomId: $roomId) {
+      id
+      text
+      createdAt
+      user {
+        id
+        userName
+        avatar
+        itsMe
+      }
+    }
+  }
+`;
+
+export const SEND_MESSAGE = gql`
+  mutation sendMessage($roomId: Int!, $text: String!) {
+    sendMessage(roomId: $roomId, text: $text) {
+      id
+      text
+      createdAt
+      user {
+        id
+        userName
+        avatar
+      }
+    }
+  }
+`;
+
+export const SEARCH_ROOM = gql`
+  query searchRoom($term: String!) {
+    searchRoom(term: $term) {
+      id
+      participants {
+        ...CoreUserFields
+      }
+      messages {
+        id
+        text
+        createdAt
+      }
+      createdAt
+    }
+  }
+  ${CORE_USER_FIELDS}
+`;
