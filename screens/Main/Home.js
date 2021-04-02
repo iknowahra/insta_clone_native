@@ -5,18 +5,21 @@ import {
   ScrollView,
   RefreshControl,
   Text,
+  Platform,
 } from 'react-native';
 import Loader from '../../components/Loader';
-import { useQuery } from '@apollo/client';
+import { useLazyQuery, useQuery } from '@apollo/client';
 import { FEED_QUERY } from '../../contexts/Queries';
 import FullFeeds from '../../components/Post/FullFeeds';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import themes from '../../contexts/ThemeContext';
 import Constants from '../../components/Constants';
+import { Ionicons } from '@expo/vector-icons';
+import { useEffect } from 'react';
 
 export default ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
-  const { loading, data, refetch } = useQuery(FEED_QUERY, {
+  const [getData, { loading, data, refetch }] = useLazyQuery(FEED_QUERY, {
     nextFetchPolicy: 'no-cache',
     pollInterval: 50000,
   });
@@ -30,6 +33,11 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   });
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <ScrollView
       contentContainerStyle={styles.container}
@@ -40,6 +48,13 @@ export default ({ navigation }) => {
     >
       {!loading && !data?.seeFeed?.length && (
         <View style={styles.noPostsContainer}>
+          <Ionicons
+            name={
+              Platform.OS === 'ios' ? 'ios-planet-outline' : 'md-planet-outline'
+            }
+            size={45}
+            color="black"
+          />
           <Text style={styles.noPostsText}>No post yet</Text>
           <Pressable
             style={styles.noPostsButton}
@@ -72,15 +87,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
-  noPostsText: { fontSize: 20 },
+  noPostsText: { fontSize: 18 },
   noPostsButton: {
     backgroundColor: themes.blueColor,
     borderRadius: 4,
-    width: Constants.width / 2.7,
+    width: Constants.width / 3,
     height: 35,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 10,
   },
-  noPostsButtonText: { fontSize: 18, color: 'white', textAlign: 'center' },
+  noPostsButtonText: { fontSize: 16, color: 'white', textAlign: 'center' },
 });

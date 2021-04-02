@@ -70,16 +70,6 @@ export default ({ route, navigation }) => {
     onfetch(route.params?.term);
   }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      null;
-      return () => {
-        navigation.navigate('Search');
-      };
-    }, []),
-  );
-
-  console.log(postData);
   return (
     <View style={styles.container}>
       <ScrollView
@@ -93,7 +83,16 @@ export default ({ route, navigation }) => {
         {!loading && searchUser ? (
           userData?.searchUser[0] ? (
             userData?.searchUser?.map((user, index) => (
-              <Pressable style={styles.userContainer} key={index}>
+              <Pressable
+                style={styles.userContainer}
+                key={index}
+                onPress={() => {
+                  console.log('***', user.userName);
+                  navigation.navigate('YourProfile', {
+                    username: user.userName,
+                  });
+                }}
+              >
                 {user.avatar ? (
                   <Image source={{ uri: user.avatar }} style={styles.avatar} />
                 ) : (

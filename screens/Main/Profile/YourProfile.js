@@ -13,6 +13,7 @@ import { GET_YOURPROFILE } from '../../../contexts/Queries';
 export default ({ route, navigation }) => {
   const { loading, data, error } = useQuery(GET_YOURPROFILE, {
     variables: { userName: route.params?.username },
+    fetchPolicy: 'network-only',
   });
 
   console.log('yourpforil', route?.params);

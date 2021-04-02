@@ -110,7 +110,7 @@ export default ({ navigation, route }) => {
   }, [isFbLogin]);
 
   useEffect(() => {
-    preLoad();
+    return () => preLoad();
   }, []);
   return (
     <View style={styles.container}>
