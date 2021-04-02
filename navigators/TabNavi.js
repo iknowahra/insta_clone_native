@@ -131,6 +131,7 @@ export default function TabNavigation({ navigation }) {
       <Tab.Screen
         name="Search"
         options={{
+          unmountOnBlur: true,
           tabBarIcon: ({ focused }) => (
             <Ionicons
               name={
@@ -153,6 +154,7 @@ export default function TabNavigation({ navigation }) {
       <Tab.Screen
         name="Add"
         options={{
+          unmountOnBlur: true,
           tabBarVisible: false,
           tabBarIcon: ({ focused }) => (
             <AntDesign

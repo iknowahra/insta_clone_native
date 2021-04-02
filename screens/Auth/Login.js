@@ -154,7 +154,7 @@ export default ({ navigation, route }) => {
   }, [isLogin]);
 
   useEffect(() => {
-    preLoad();
+    return () => preLoad();
   }, []);
 
   return (
