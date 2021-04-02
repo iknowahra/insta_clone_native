@@ -6,7 +6,7 @@ import UseInput from '../UseInput';
 import themes from '../../contexts/ThemeContext';
 import constants from '../Constants';
 
-const SearchBar = ({ onNavigate }) => {
+const SearchBar = ({ onNavigate, size }) => {
   const [value, onChangeText] = useState('');
 
   const onSubmit = async () => {
@@ -24,7 +24,7 @@ const SearchBar = ({ onNavigate }) => {
     >
       <UseInput
         numberOfLines={1}
-        style={styles.textInput}
+        style={!size ? styles.textInput : { ...styles.textInput, width: size }}
         placeholder="Search"
         autoCapitalize={'none'}
         returnKeyType={'search'}
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     backgroundColor: themes.veryLightGreyColor,
     fontSize: 15,
-    borderRadius: 4,
+    borderRadius: 7,
   },
 });
 
