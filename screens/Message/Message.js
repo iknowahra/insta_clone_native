@@ -6,7 +6,8 @@ import themes from '../../contexts/ThemeContext';
 import NoAvatar from '../../contexts/NoAvatar';
 import Header from '../../components/Message/Header';
 import ChatInput from '../../components/Message/ChatInput';
-import { useLazyQuery, useQuery, useSubscription } from '@apollo/client';
+import { Entypo } from '@expo/vector-icons';
+import { useQuery, useSubscription } from '@apollo/client';
 import { GET_MESSAGE, SUB_MESSAGE } from '../../contexts/Queries';
 import * as timeago from 'timeago.js';
 
@@ -20,12 +21,9 @@ export default ({ route, navigation }) => {
     fetchPolicy: 'network-only',
   });
 
-  const { data: subData, loading: subLoading, error } = useSubscription(
-    SUB_MESSAGE,
-    {
-      variables: { roomId },
-    },
-  );
+  const { data: subData, loading: subLoading } = useSubscription(SUB_MESSAGE, {
+    variables: { roomId },
+  });
 
   useEffect(() => {
     if (data) {
@@ -59,10 +57,20 @@ export default ({ route, navigation }) => {
           }}
           ref={scrollViewRef}
           onContentSizeChange={() =>
-            scrollViewRef.current.scrollToEnd({ animated: false })
+            userNumber === 1 && !messages.length
+              ? scrollViewRef.current.scrollToEnd({
+                  animated: true,
+                  duration: 2000,
+                })
+              : scrollViewRef.current.scrollToEnd({ animated: false })
           }
           onLayout={() =>
-            scrollViewRef.current.scrollToEnd({ animated: false })
+            userNumber === 1 && !messages.length
+              ? scrollViewRef.current.scrollToEnd({
+                  animated: true,
+                  duration: 2000,
+                })
+              : scrollViewRef.current.scrollToEnd({ animated: false })
           }
           overScrollMode={'auto'}
         >
@@ -88,6 +96,26 @@ export default ({ route, navigation }) => {
             </View>
 
             <View style={styles.messageContainer}>
+              {!loading && !messages?.length && (
+                <View style={styles.message}>
+                  <Entypo
+                    name="instagram-with-circle"
+                    size={38}
+                    color={themes.borderGreyColor}
+                  />
+
+                  <View style={styles.yourMessageContainer}>
+                    <Text style={styles.yourMessage}>
+                      Say hi to your friends first!
+                    </Text>
+                    <View style={styles.date}>
+                      <Text style={styles.dateText}>
+                        {timeago.format(new Date())}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              )}
               {!loading &&
                 messages?.map((message) => (
                   <View
@@ -163,7 +191,7 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
     borderWidth: 0.9,
-    borderColor: themes.borderGreyColor,
+    borderColor: themes.lightGreyColor,
   },
   username: {
     fontSize: 17,
@@ -185,9 +213,8 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     justifyContent: 'space-between',
-    minHeight: Constants.height / 1.5,
+    minHeight: Constants.height / 1.4,
   },
-  messageContainer: {},
   message: {
     flexDirection: 'row',
     marginBottom: 8,

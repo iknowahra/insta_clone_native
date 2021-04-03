@@ -1,18 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
 import UseInput from '../UseInput';
 import themes from '../../contexts/ThemeContext';
 import constants from '../Constants';
+import { useLayoutEffect } from 'react';
 
-const SearchBar = ({ onNavigate, size }) => {
-  const [value, onChangeText] = useState('');
+const SearchBar = ({
+  onNavigate,
+  size,
+  onChange,
+  initialValue = '',
+  onFocus,
+  onClear,
+}) => {
+  const [value, onChangeText] = useState(initialValue);
 
   const onSubmit = async () => {
     onChangeText('');
     onNavigate(value);
   };
+
+  const handleChange = (term) => {
+    onChangeText(term);
+    onChange(term);
+  };
+
+  useEffect(() => {
+    onClear ? onChangeText('') : null;
+  }, [onClear]);
 
   return (
     <View
@@ -30,9 +46,12 @@ const SearchBar = ({ onNavigate, size }) => {
         returnKeyType={'search'}
         placeholderTextColor={themes.darkGreyColor}
         underlineColorAndroid="transparent"
-        onChangeText={(text) => onChangeText(text)}
+        onChangeText={
+          onChange ? (text) => handleChange(text) : (text) => onChangeText(text)
+        }
         value={value}
         onSubmitEditing={onSubmit}
+        autoFocus={onFocus}
       />
       <View style={{ position: 'relative', top: 10, left: -25 }}>
         <FontAwesome name="search" size={18} color={themes.darkGreyColor} />

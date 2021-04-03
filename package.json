@@ -36,6 +36,7 @@
     "react-native-screens": "~2.15.0",
     "react-native-swiper": "1.6.0",
     "react-native-tab-view": "2.15.2",
+    "react-native-tags": "2.2.0",
     "react-native-text-size": "4.0.0-rc.1",
     "react-native-web": "~0.13.12",
     "style-component": "0.0.1",

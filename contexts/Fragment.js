@@ -5,6 +5,8 @@ export const CORE_USER_FIELDS = gql`
     id
     userName
     avatar
+    itsMe
+    name
   }
 `;
 
@@ -45,12 +47,10 @@ export const FULL_USER_FIELDS = gql`
   fragment FullUserFields on User {
     ...CoreUserFields
     amIFollowing
-    itsMe
     bio
     followersCount
     followingCount
     postCount
-    fullName
     followers {
       ...CoreUserFields
     }
