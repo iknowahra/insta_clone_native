@@ -18,13 +18,17 @@ import themes from '../../contexts/ThemeContext';
 import * as timeago from 'timeago.js';
 
 export default ({ navigation, route }) => {
-  const { term, userName } = route.params;
+  const { term, userName, onFocus } = route.params;
   const [currentTerm, setTerm] = useState(term);
   const [refreshing, setRefreshing] = useState(false);
   const [rooms, setRooms] = useState([]);
-  const [onfetch, { data: filterdRooms, error, refetch }] = useLazyQuery(
-    SEARCH_ROOM,
-  );
+  const [
+    onfetch,
+    { data: filterdRooms, error, refetch },
+  ] = useLazyQuery(SEARCH_ROOM, {
+    fetchPolicy: 'network-only',
+    pollInterval: 500,
+  });
 
   const onRefresh = useCallback(async () => {
     try {
@@ -39,11 +43,11 @@ export default ({ navigation, route }) => {
 
   const liftTerm = (term) => {
     setTerm(term);
-    onfetch({ variables: { term } });
+    onfetch({ variables: { term }, skip: term === '' });
   };
 
   useEffect(() => {
-    onfetch({ variables: { term: currentTerm } });
+    onfetch({ variables: { term: currentTerm }, skip: term === '' });
   }, []);
 
   useEffect(() => {
@@ -67,10 +71,16 @@ export default ({ navigation, route }) => {
     <View style={styles.container}>
       <View style={styles.searchBar}>
         <SearchBar
-          onNavigate={(term) => liftTerm(term)}
+          onChange={(term) => liftTerm(term)}
           size={Constants.width / 1.2}
+          initialValue={currentTerm}
+          onFocus={onFocus}
+          isFocused={true}
         />
-        <Text style={styles.cancel} onPress={() => navigation.goBack()}>
+        <Text
+          style={styles.cancel}
+          onPress={() => navigation.navigate('Messages', { term: '' })}
+        >
           Cancel
         </Text>
       </View>

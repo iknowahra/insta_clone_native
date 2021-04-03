@@ -11,6 +11,9 @@ export const GET_MYPROFILE = gql`
     myProfile {
       user {
         ...FullUserFields
+        friends {
+          ...CoreUserFields
+        }
       }
       posts {
         ...FullPostFields
@@ -237,6 +240,29 @@ export const SEARCH_ROOM = gql`
         createdAt
       }
       createdAt
+    }
+  }
+  ${CORE_USER_FIELDS}
+`;
+
+export const MAKE_ROOM = gql`
+  mutation makeRoom($toIds: [Int!]!, $name: String) {
+    makeRoom(toIds: $toIds, name: $name) {
+      ok
+      duplication
+      error
+      room {
+        id
+        createdAt
+        participants {
+          ...CoreUserFields
+        }
+        messages {
+          id
+          text
+          createdAt
+        }
+      }
     }
   }
   ${CORE_USER_FIELDS}

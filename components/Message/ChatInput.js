@@ -54,7 +54,7 @@ const ChatInput = ({ roomId }) => {
 const styles = StyleSheet.create({
   container: {
     width: constants.width,
-    paddingBottom: 10,
+    paddingBottom: 5,
   },
   textInput: {
     position: 'relative',
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: themes.blueColor,
     position: 'absolute',
-    bottom: 14,
+    bottom: 9,
     left: 9,
   },
   photo: {
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
-    bottom: 14,
+    bottom: 9,
     right: 17,
   },
 });
