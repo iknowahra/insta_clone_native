@@ -13,6 +13,7 @@ import LogoutButton from '../components/Auth/LogoutButton';
 import Logo from '../assets/logoLetter.png';
 import themes from '../contexts/ThemeContext';
 import SearchNavigation from './SearchNavi';
+import HomeNavigation from './HomeNavi';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -61,72 +62,7 @@ export default function TabNavigation({ navigation }) {
           ),
         }}
       >
-        {() =>
-          stackFactory(
-            Home,
-            'Home',
-            {
-              headerTitle: () => (
-                <Image source={Logo} style={{ width: 110, height: 50 }} />
-              ),
-              headerLeft: () => (
-                <Pressable onPress={() => null}>
-                  <Ionicons
-                    name={Platform.OS === 'ios' ? 'ios-camera' : 'md-camera'}
-                    size={30}
-                    style={{ marginLeft: 10 }}
-                  />
-                </Pressable>
-              ),
-              headerTitleAlign: 'center',
-              headerStyle:
-                Platform.OS === 'ios'
-                  ? { shadowColor: 'transparent' }
-                  : { backgroundColor: '#fff', elevation: 0 },
-              headerRight: () => (
-                <Pressable
-                  onPress={() => navigation.navigate('MessageNavigation')}
-                >
-                  <Ionicons
-                    name={
-                      Platform.OS === 'ios'
-                        ? 'ios-paper-plane-outline'
-                        : 'md-paper-plane-outline'
-                    }
-                    size={26}
-                    style={{ marginRight: 10 }}
-                  />
-                </Pressable>
-              ),
-            },
-            <Stack.Screen
-              name="Comments"
-              component={Comments}
-              options={{
-                headerTitleAlign: 'center',
-                headerStyle:
-                  Platform.OS === 'ios'
-                    ? { shadowColor: 'transparent' }
-                    : { backgroundColor: '#fff', elevation: 0 },
-                headerRight: () => (
-                  <Pressable
-                    onPress={() => navigation.navigate('MessageNavigation')}
-                  >
-                    <Ionicons
-                      name={
-                        Platform.OS === 'ios'
-                          ? 'ios-paper-plane-outline'
-                          : 'md-paper-plane-outline'
-                      }
-                      size={26}
-                      style={{ marginRight: 10 }}
-                    />
-                  </Pressable>
-                ),
-              }}
-            />,
-          )
-        }
+        {() => <HomeNavigation />}
       </Tab.Screen>
       <Tab.Screen
         name="Search"

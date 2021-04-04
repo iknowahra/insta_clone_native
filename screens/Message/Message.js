@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import Constants from '../../components/Constants';
 import themes from '../../contexts/ThemeContext';
-import NoAvatar from '../../contexts/NoAvatar';
+import NoAvatar from '../../assets/default-avatar.png';
 import Header from '../../components/Message/Header';
 import ChatInput from '../../components/Message/ChatInput';
 import { Entypo } from '@expo/vector-icons';
@@ -79,7 +79,7 @@ export default ({ route, navigation }) => {
               {userNumber === 1 && (
                 <View style={styles.avatarContainer}>
                   <Image
-                    source={{ uri: roomAvatars[0] || NoAvatar }}
+                    source={roomAvatars[0] ? { uri: roomAvatars[0] } : NoAvatar}
                     style={styles.avatar}
                   />
                   <Text style={styles.username}>{roomname}</Text>
@@ -132,7 +132,11 @@ export default ({ route, navigation }) => {
                   >
                     {!message.user.itsMe && (
                       <Image
-                        source={{ uri: message.user.avatar || NoAvatar }}
+                        source={
+                          message.user.avatar
+                            ? { uri: message.user.avatar }
+                            : NoAvatar
+                        }
                         style={styles.smAvatar}
                       />
                     )}

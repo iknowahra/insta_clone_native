@@ -13,7 +13,7 @@ import Tags from 'react-native-tags';
 import ThemeContext from '../../contexts/ThemeContext';
 import Constants from '../../components/Constants';
 import { GET_MYPROFILE, GET_MYROOMS, MAKE_ROOM } from '../../contexts/Queries';
-import NoAvatar from '../../contexts/NoAvatar';
+import NoAvatar from '../../assets/default-avatar.png';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default ({ navigation, route }) => {
@@ -169,7 +169,7 @@ export default ({ navigation, route }) => {
                   >
                     <View style={styles.user}>
                       <Image
-                        source={{ uri: user.avatar || NoAvatar }}
+                        source={user.avatar ? { uri: user.avatar } : NoAvatar}
                         style={styles.avatar}
                       />
                       <View style={styles.userText}>

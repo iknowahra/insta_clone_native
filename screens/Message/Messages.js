@@ -20,7 +20,7 @@ import { getUserNameVar } from '../../contexts/LocalContext';
 import { GET_MYPROFILE, GET_MYROOMS } from '../../contexts/Queries';
 import SearchBar from '../../components/Search/SearchBar';
 import Constants from '../../components/Constants';
-import NoAvatar from '../../contexts/NoAvatar';
+import NoAvatar from '../../assets/default-avatar.png';
 import ThemeContext from '../../contexts/ThemeContext';
 import * as timeago from 'timeago.js';
 import { Entypo } from '@expo/vector-icons';
@@ -64,11 +64,7 @@ export default ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
-      async function onRefetch() {
-        await refetch();
-        setOnClear(true);
-      }
-      onRefetch();
+      setOnClear(true);
       return () => {
         setOnClear(false);
       };
@@ -82,7 +78,7 @@ export default ({ navigation }) => {
           <HeaderBackButton
             style={styles.buttonClose}
             onPress={() => {
-              navigation.navigate('Messages');
+              navigation.navigate('Home');
             }}
           />
           <Text style={styles.titleText}>{userName}</Text>
@@ -144,7 +140,11 @@ export default ({ navigation }) => {
                   {filteredUsers?.length === 1 && (
                     <View style={styles.avatarContainer}>
                       <Image
-                        source={{ uri: filteredUsers[0]?.avatar || NoAvatar }}
+                        source={
+                          filteredUsers[0]?.avatar
+                            ? { uri: filteredUsers[0]?.avatar }
+                            : NoAvatar
+                        }
                         style={styles.avatar}
                       />
                       {!room.messages.length && (
@@ -155,11 +155,19 @@ export default ({ navigation }) => {
                   {filteredUsers?.length > 1 && (
                     <View style={styles.avatarContainer}>
                       <Image
-                        source={{ uri: filteredUsers[0]?.avatar || NoAvatar }}
+                        source={
+                          filteredUsers[0]?.avatar
+                            ? { uri: filteredUsers[0]?.avatar }
+                            : NoAvatar
+                        }
                         style={styles.avatarMulti}
                       />
                       <Image
-                        source={{ uri: filteredUsers[1]?.avatar || NoAvatar }}
+                        source={
+                          filteredUsers[1]?.avatar
+                            ? { uri: filteredUsers[1]?.avatar }
+                            : NoAvatar
+                        }
                         style={{
                           ...styles.avatarMulti,
                           top: 18,
