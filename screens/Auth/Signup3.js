@@ -15,9 +15,9 @@ import AuthInput from '../../components/Auth/AuthInput';
 
 export default ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
-  const { email, username } = (route.params = {});
-
-  const onhandleSubmit = async (values) => {
+  const { email, username } = route?.params;
+  const onhandleSubmit = (values) => {
+    console.log('333', values, email, username);
     try {
       setLoading(true);
       navigation.navigate('SignupOpt', {

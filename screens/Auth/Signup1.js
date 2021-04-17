@@ -17,7 +17,7 @@ import AuthButton from '../../components/Auth/AuthButton';
 import AuthInput from '../../components/Auth/AuthInput';
 
 export default ({ navigation, route }) => {
-  const email = route.params?.email;
+  const { email } = route?.params;
   const [loading, setLoading] = useState(false);
   const [checkUserValidationQuery, { data }] = useLazyQuery(CHECK_USER, {
     fetchPolicy: 'no-cache',
@@ -28,8 +28,10 @@ export default ({ navigation, route }) => {
       setLoading(true);
       checkUserValidationQuery({
         variables: { email: values.email },
+        onCompleted: (values) => console.log('completed', values),
       });
       if (data && data.checkUser) {
+        console.log('***');
         const { checkUser } = data;
         if (!checkUser.ok) {
           if (checkUser.error === 'Taken') {
@@ -53,13 +55,14 @@ export default ({ navigation, route }) => {
         }
       }
     } catch (e) {
-      console.log('Signup page', e);
+      console.log('Signup1 page', e);
       Alert.alert('Unknown error happens', 'Please try to log in again.');
     } finally {
       setLoading(false);
     }
   };
 
+  console.log('**1', data?.checkUser);
   return (
     <View style={styles.container}>
       <Formik

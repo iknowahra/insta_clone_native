@@ -12,11 +12,11 @@ import {
 } from 'react-native';
 import * as yup from 'yup';
 import { Formik } from 'formik';
-import { useMutation } from '@apollo/client';
+import { useMutation, useLazyQuery } from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Facebook from 'expo-facebook';
 
-import { LOG_IN, LOG_IN_FB } from './Queries';
+import { LOG_IN, LOG_IN_FB, CHECK_USER } from './Queries';
 import { isLogginVar } from '../../contexts/LocalContext';
 import themes from '../../contexts/ThemeContext';
 import logo from '../../assets/logoLetter.png';
@@ -32,6 +32,9 @@ export default ({ navigation, route }) => {
   const [fbUser, setFbUser] = useState('');
   const [loginEmailMutation] = useMutation(LOG_IN);
   const [loginFbMutation] = useMutation(LOG_IN_FB);
+  const [checkUserValidationQuery, { data }] = useLazyQuery(CHECK_USER, {
+    fetchPolicy: 'no-cache',
+  });
 
   const preLoad = async () => {
     const fbToken = await AsyncStorage.getItem('FBtoken');
@@ -39,6 +42,25 @@ export default ({ navigation, route }) => {
     if (fbUserInfo) {
       const { name } = JSON.parse(fbUserInfo);
       setFbUser(name);
+    }
+  };
+
+  const onCheckNewAccount = async (email) => {
+    checkUserValidationQuery({
+      variables: { email },
+    });
+    if (data && data.checkUser) {
+      const { checkUser } = data;
+      if (!checkUser.ok) {
+        if (checkUser.error === 'Taken') {
+          return false;
+        }
+        console.log('checkUserError', checkUser.error);
+        Alert.alert('Sorry for the Error', checkUser.error);
+        return null;
+      } else {
+        return true;
+      }
     }
   };
 

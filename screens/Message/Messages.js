@@ -54,6 +54,9 @@ export default ({ navigation }) => {
 
   useEffect(() => {
     getMyRooms();
+    if (roomsData) {
+      setRooms(roomsData.seeRooms);
+    }
   }, []);
 
   useEffect(() => {

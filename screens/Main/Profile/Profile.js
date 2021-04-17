@@ -7,7 +7,9 @@ import { GET_MYPROFILE } from '../../../contexts/Queries';
 import { getUserNameVar } from '../../../contexts/LocalContext';
 
 export default () => {
-  const { loading, data, error, refetch } = useQuery(GET_MYPROFILE);
+  const { loading, data, error, refetch } = useQuery(GET_MYPROFILE, {
+    fetchPolicy: 'network-only',
+  });
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = useCallback(async () => {
     try {
