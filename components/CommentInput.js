@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from './Constants';
 import UseInput from './UseInput';
 import themes from '../contexts/ThemeContext';
-import NoAvatar from '../contexts/NoAvatar';
+import NoAvatar from '../assets/default-avatar.png';
 import { ADD_COMMENT } from '../contexts/Queries';
 import { useMutation } from '@apollo/client';
 
@@ -62,7 +62,7 @@ export default ({ postId, setComments, autoFocus }) => {
       </View>
       <View style={styles.InputRow}>
         <Image
-          source={{ uri: currentUser?.avatar || NoAvatar }}
+          source={currentUser?.avatar ? { uri: currentUser?.avatar } : NoAvatar}
           style={styles.commentAvatar}
         />
         <View style={styles.container}>

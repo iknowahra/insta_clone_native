@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { Image, View, StyleSheet, Text, Pressable } from 'react-native';
 import Swiper from 'react-native-swiper';
-import NoAvatar from '../../contexts/NoAvatar';
+import NoAvatar from '../../assets/default-avatar.png';
 import constants from '../Constants';
 import UserBold from '../Username';
 import themes from '../../contexts/ThemeContext';
@@ -69,7 +69,7 @@ const Feed = ({
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <Image
-          source={{ uri: user.avatar || NoAvatar }}
+          source={user.avatar ? { uri: user.avatar } : NoAvatar}
           style={styles.avatar}
         />
         <View style={styles.headerCaption}>

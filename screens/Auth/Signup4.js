@@ -17,7 +17,7 @@ import AuthButton from '../../components/Auth/AuthButton';
 import AuthInput from '../../components/Auth/AuthInput';
 
 export default ({ navigation, route }) => {
-  const { email, username, firstName, lastName } = (route.params = {});
+  const { email, username, firstName, lastName } = route.params;
   const [loading, setLoading] = useState(false);
   const [createAccountMutation, { data }] = useMutation(SIGN_UP);
 
@@ -38,7 +38,7 @@ export default ({ navigation, route }) => {
         if (!createAccount.ok) {
           Alert.alert('Error', createAccount.error);
         } else {
-          navigation.navigate('AuthHome', { email });
+          navigation.navigate('AuthHome', { email, username });
         }
       }
     } catch (e) {
@@ -48,7 +48,6 @@ export default ({ navigation, route }) => {
       setLoading(false);
     }
   };
-
   return (
     <View style={styles.container}>
       <Formik
@@ -102,7 +101,7 @@ export default ({ navigation, route }) => {
                   </Text>
                   <AuthButton
                     onPress={handleSubmit}
-                    text="NEXT"
+                    text="Submit"
                     loading={loading}
                     disabled={!isValid}
                   />

@@ -37,7 +37,6 @@ export default ({ user, posts }) => {
     navigation.setOptions({ title: user.userName });
   }, [user]);
 
-  console.log('userpfoil, user.amIFollowing', user?.amIFollowing);
   return (
     <View style={styles.container}>
       <View style={styles.headerWrapper}>

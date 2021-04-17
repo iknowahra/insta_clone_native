@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/core';
 import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import Constants from '../../components/Constants';
 import themes from '../../contexts/ThemeContext';
-import NoAvatar from '../../contexts/NoAvatar';
+import NoAvatar from '../../assets/default-avatar.png';
 import * as timeago from 'timeago.js';
 
 export default ({ roomname, roomAvatars, userNumber, roomInfo }) => {
@@ -20,7 +20,7 @@ export default ({ roomname, roomAvatars, userNumber, roomInfo }) => {
           {userNumber === 1 && (
             <View style={styles.avatarContainer}>
               <Image
-                source={{ uri: roomAvatars[0] || NoAvatar }}
+                source={roomAvatars[0] ? { uri: roomAvatars[0] } : NoAvatar}
                 style={styles.avatar}
               />
             </View>
@@ -28,11 +28,11 @@ export default ({ roomname, roomAvatars, userNumber, roomInfo }) => {
           {userNumber > 1 && (
             <View style={styles.avatarContainer}>
               <Image
-                source={{ uri: roomAvatars[0] || NoAvatar }}
+                source={roomAvatars[0] ? { uri: roomAvatars[0] } : NoAvatar}
                 style={styles.avatarMulti}
               />
               <Image
-                source={{ uri: roomAvatars[1] || NoAvatar }}
+                source={roomAvatars[1] ? { uri: roomAvatars[1] } : NoAvatar}
                 style={{
                   ...styles.avatarMulti,
                   top: 13,

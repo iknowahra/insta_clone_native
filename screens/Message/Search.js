@@ -13,7 +13,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { SEARCH_ROOM } from '../../contexts/Queries';
 import SearchBar from '../../components/Search/SearchBar';
 import Constants from '../../components/Constants';
-import NoAvatar from '../../contexts/NoAvatar';
+import NoAvatar from '../../assets/default-avatar.png';
 import themes from '../../contexts/ThemeContext';
 import * as timeago from 'timeago.js';
 
@@ -22,13 +22,13 @@ export default ({ navigation, route }) => {
   const [currentTerm, setTerm] = useState(term);
   const [refreshing, setRefreshing] = useState(false);
   const [rooms, setRooms] = useState([]);
-  const [
-    onfetch,
-    { data: filterdRooms, error, refetch },
-  ] = useLazyQuery(SEARCH_ROOM, {
-    fetchPolicy: 'network-only',
-    pollInterval: 500,
-  });
+  const [onfetch, { data: filterdRooms, error, refetch }] = useLazyQuery(
+    SEARCH_ROOM,
+    {
+      fetchPolicy: 'network-only',
+      pollInterval: 500,
+    },
+  );
 
   const onRefresh = useCallback(async () => {
     try {
@@ -55,17 +55,6 @@ export default ({ navigation, route }) => {
       setRooms(filterdRooms.searchRoom);
     }
   }, [filterdRooms]);
-
-  useFocusEffect(
-    useCallback(() => {
-      async function onRefetch() {
-        await refetch();
-        return;
-      }
-      onRefetch();
-      return () => null;
-    }, []),
-  );
 
   return (
     <View style={styles.container}>
@@ -124,7 +113,11 @@ export default ({ navigation, route }) => {
                   {filteredUsers?.length === 1 && (
                     <View style={styles.avatarContainer}>
                       <Image
-                        source={{ uri: filteredUsers[0]?.avatar || NoAvatar }}
+                        source={
+                          filteredUsers[0]?.avatar
+                            ? { uri: filteredUsers[0]?.avatar }
+                            : NoAvatar
+                        }
                         style={styles.avatar}
                       />
                     </View>
@@ -132,11 +125,19 @@ export default ({ navigation, route }) => {
                   {filteredUsers?.length > 1 && (
                     <View style={styles.avatarContainer}>
                       <Image
-                        source={{ uri: filteredUsers[0]?.avatar || NoAvatar }}
+                        source={
+                          filteredUsers[0]?.avatar
+                            ? { uri: filteredUsers[0]?.avatar }
+                            : NoAvatar
+                        }
                         style={styles.avatarMulti}
                       />
                       <Image
-                        source={{ uri: filteredUsers[1]?.avatar || NoAvatar }}
+                        source={
+                          filteredUsers[1]?.avatar
+                            ? { uri: filteredUsers[1]?.avatar }
+                            : NoAvatar
+                        }
                         style={{
                           ...styles.avatarMulti,
                           top: 18,

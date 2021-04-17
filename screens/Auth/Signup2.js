@@ -105,7 +105,7 @@ export default ({ navigation, route }) => {
         }
       }
     } catch (e) {
-      console.log('Signup page', e);
+      console.log('Signup page2', e);
       Alert.alert('Unknown error happens', 'Please try to log in again.');
     } finally {
       setLoading(false);
@@ -116,9 +116,8 @@ export default ({ navigation, route }) => {
     <View style={styles.container}>
       <Formik
         validationSchema={SignupSchema}
-        initialValues={{ email: route.params?.email }}
+        initialValues={{ username: '' }}
         onSubmit={(values) => onhandleSubmit(values)}
-        onChangeText={(values) => {}}
       >
         {({
           handleChange,

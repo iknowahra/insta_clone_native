@@ -46,7 +46,7 @@ export default ({ navigation }) => {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      {!loading && !data?.seeFeed?.length && (
+      {!loading && data && !data?.seeFeed?.length && (
         <View style={styles.noPostsContainer}>
           <Ionicons
             name={

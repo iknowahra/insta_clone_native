@@ -16,7 +16,6 @@ export default ({ route, navigation }) => {
     fetchPolicy: 'network-only',
   });
 
-  console.log('yourpforil', route?.params);
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = useCallback(async () => {
     try {
