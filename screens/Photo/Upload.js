@@ -62,7 +62,7 @@ export default ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.photoHeader}>
-        <Image source={{ uri: selectedPhoto[0]?.uri }} style={styles.photo} />
+        <Image source={{ uri: files[0]?.uri }} style={styles.photo} />
         <UseInput
           style={styles.captionInput}
           placeholder="Input caption..."

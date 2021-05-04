@@ -15,6 +15,7 @@ import { FEED_QUERY, UPLOAD_PHOTO } from '../contexts/Queries';
 
 const Stack = createStackNavigator();
 export default function PhotoNavigation() {
+  const [done, setBeDone] = useState(false);
   const navigation = useNavigation();
   const photosData = useReactiveVar(sendPhotosVar);
   const [uploadPostMutation, { data: mutationData, loading }] = useMutation(
@@ -22,6 +23,7 @@ export default function PhotoNavigation() {
   );
 
   const onShareData = async () => {
+    setBeDone(true);
     try {
       const formData = new FormData();
       for (let photo of photosData?.files) {
@@ -31,11 +33,12 @@ export default function PhotoNavigation() {
           uri: photo.uri,
         });
       }
+
       const {
         data: { filesArray },
       } = await axios({
         method: 'post',
-        url: 'http://10.0.2.2:5000/api/upload',
+        url: 'https://ahrastargram.herokuapp.com/api/upload',
         data: formData,
         headers: {
           Accept: 'application/json',
@@ -67,9 +70,7 @@ export default function PhotoNavigation() {
         },
       });
 
-      if (mutationData?.uploadPost?.ok) {
-        navigation.navigate('Home');
-      }
+      navigation.navigate('Home');
     } catch (e) {
       console.log('upload error : ', e);
       Alert.alert('Network Error', 'Sorry for the error. Please try later.');
@@ -142,7 +143,7 @@ export default function PhotoNavigation() {
             <Pressable
               style={{ paddingRight: 13 }}
               onPress={onShareData}
-              disabled={loading ? true : false}
+              disabled={done ? true : false}
             >
               <Text
                 style={{

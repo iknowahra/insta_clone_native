@@ -13,10 +13,10 @@ import {
 import { setContext } from '@apollo/client/link/context';
 
 const httpLink = createHttpLink({
-  uri: 'http://10.0.2.2:5000/graphql',
+  uri: 'https://ahrastargram.herokuapp.com/graphql', // 'http://10.0.2.2:5000/graphql'
 });
 const wsLink = new WebSocketLink({
-  uri: 'ws://10.0.2.2:5000/subscriptions',
+  uri: 'wss://ahrastargram.herokuapp.com/subscriptions',
   options: {
     reconnect: true,
     connectionParams: {

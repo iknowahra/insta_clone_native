@@ -174,9 +174,9 @@ export default ({ navigation, route }) => {
                       />
                       <View style={styles.userText}>
                         <Text style={styles.normalText}>
-                          {user.name || user.userName}
+                          {user.name.length > 1 ? user.name : user.userName}
                         </Text>
-                        {user.name ? (
+                        {user.name.length > 1 ? (
                           <Text style={styles.username}>{user.userName}</Text>
                         ) : null}
                       </View>
