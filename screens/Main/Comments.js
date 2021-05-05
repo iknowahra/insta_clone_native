@@ -15,6 +15,7 @@ import Username from '../../components/Username';
 import Loader from '../../components/Loader';
 import CommentInput from '../../components/CommentInput';
 import Constants from '../../components/Constants';
+import NoAvatar from '../../assets/default-avatar.png';
 
 export default ({ route }) => {
   const { data, loading, error, refetch } = useQuery(GET_ALLCOMMENTS, {
@@ -67,7 +68,11 @@ export default ({ route }) => {
               }}
             >
               <Image
-                source={{ uri: data.seeFullPost.user.avatar }}
+                source={
+                  data.seeFullPost.user.avatar
+                    ? { uri: data.seeFullPost.user.avatar }
+                    : NoAvatar
+                }
                 style={styles.avatar}
               ></Image>
               <View style={styles.commentColumn}>
@@ -86,9 +91,9 @@ export default ({ route }) => {
               {comments?.map((comment, index) => (
                 <View style={styles.wrapper} key={index}>
                   <Image
-                    source={{ uri: comment.avatar }}
+                    source={comment.avatar ? { uri: comment.avatar } : NoAvatar}
                     style={styles.avatar}
-                  ></Image>
+                  />
                   <View style={styles.commentColumn}>
                     <Text style={styles.comments}>
                       <Username username={`${comment.userName} `} />

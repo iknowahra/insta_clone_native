@@ -74,11 +74,7 @@ const Feed = ({
         />
         <View style={styles.headerCaption}>
           <UserBold username={user.userName} />
-          {location && (
-            <Pressable style={styles.locationPressable} onPress={() => null}>
-              <Text style={styles.location}>{location}</Text>
-            </Pressable>
-          )}
+          {location && <Text style={styles.location}>{location}</Text>}
         </View>
         <Pressable style={styles.moreIcon} onPress={() => null}>
           <Feather name="more-horizontal" size={24} />

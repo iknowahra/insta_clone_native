@@ -2,3 +2,6 @@ node_modules
 .vscode/
 .vscode/settings.json
 settings.json
+.expo/
+.idea/
+.expo/packager-info.json

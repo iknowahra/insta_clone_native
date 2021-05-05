@@ -7,6 +7,7 @@ import themes from '../contexts/ThemeContext';
 import { FOLLOW_USER, UNFOLLOW_USER } from '../contexts/Queries';
 import Constants from './Constants';
 import SquarePost from './Post/SquarePost.js';
+import NoAvatar from '../assets/default-avatar.png';
 
 export default ({ user, posts }) => {
   const navigation = useNavigation();
@@ -41,17 +42,11 @@ export default ({ user, posts }) => {
     <View style={styles.container}>
       <View style={styles.headerWrapper}>
         <View style={styles.headerContainer}>
-          {user.avatar ? (
-            <Image source={{ uri: user.avatar }} style={styles.avatar} />
-          ) : (
-            <Image
-              source={{
-                uri:
-                  'https://3znvnpy5ek52a26m01me9p1t-wpengine.netdna-ssl.com/wp-content/uploads/2017/07/noimage_person.png',
-              }}
-              style={styles.avatar}
-            />
-          )}
+          <Image
+            source={user.avatar ? { uri: user.avatar } : NoAvatar}
+            style={styles.avatar}
+          />
+
           <View style={styles.userNumberContainer}>
             <View style={styles.userNumberColumn}>
               <Text style={styles.userNumber}>{user.postCount}</Text>

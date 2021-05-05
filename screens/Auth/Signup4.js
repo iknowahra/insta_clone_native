@@ -19,9 +19,11 @@ import AuthInput from '../../components/Auth/AuthInput';
 export default ({ navigation, route }) => {
   const { email, username, firstName, lastName } = route.params;
   const [loading, setLoading] = useState(false);
+  const [done, setBeDone] = useState(false);
   const [createAccountMutation, { data }] = useMutation(SIGN_UP);
 
   const onhandleSubmit = async (values) => {
+    setBeDone(true);
     try {
       setLoading(true);
       createAccountMutation({
@@ -33,14 +35,7 @@ export default ({ navigation, route }) => {
           password: values.password,
         },
       });
-      if (data && data.createAccount) {
-        const { createAccount } = data;
-        if (!createAccount.ok) {
-          Alert.alert('Error', createAccount.error);
-        } else {
-          navigation.navigate('AuthHome', { email, username });
-        }
-      }
+      navigation.navigate('AuthHome', { email, username });
     } catch (e) {
       console.log('Signup page', e);
       Alert.alert('Unknown error happens', 'Please try again.');
@@ -103,7 +98,7 @@ export default ({ navigation, route }) => {
                     onPress={handleSubmit}
                     text="Submit"
                     loading={loading}
-                    disabled={!isValid}
+                    disabled={done}
                   />
                 </View>
               </View>

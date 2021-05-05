@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Logo from '../assets/logoLetter.png';
 import Home from '../screens/Main/Home';
 import Comments from '../screens/Main/Comments';
+import YourProfile from '../screens/Main/Profile/YourProfile';
 
 const Stack = createStackNavigator();
 export default function HomeNavigation() {
@@ -74,6 +75,7 @@ export default function HomeNavigation() {
           ),
         }}
       />
+      <Stack.Screen name="YourProfile" component={YourProfile} />
     </Stack.Navigator>
   );
 }

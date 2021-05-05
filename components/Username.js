@@ -7,7 +7,7 @@ export default ({ username }) => {
     <Text
       onPress={() =>
         navigation.navigate('YourProfile', {
-          username,
+          username: username.split(' ')[0],
         })
       }
       style={styles.text}
